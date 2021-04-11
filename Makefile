@@ -1,19 +1,22 @@
-CC := gcc
-CFLAGS := -lm -g -std=c99
-FONTES := $(wildcard *.c)
-OBJS := $(FONTES:.c=.o)
-EXEC := regalloc
+FLEX=flex
+BISON=bison
+CC=gcc
+FLAGS=-g -Wall -lm -std=c99
 
-all: $(EXEC)
+PROGRAMA = gerador
+LEXICO = lexico.l
+SINTATICO = sintatico.y
 
-$(EXEC): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(CFLAGS)
-
-%.o: %.c
-	$(CC) -c $< $(CFLAGS)
+$(PROGRAMA): $(LEXICO) $(SINTATICO) ast.h ast.c funcoes.c funcoes.h
+	$(BISON) -d $(SINTATICO)
+	$(FLEX) $(LEXICO)
+	$(CC) -c *.c -I.  $(FLAGS)
+	$(CC) *.o -o $(PROGRAMA)  $(FLAGS)
 
 clean:
-	@rm -rf *.o $(EXEC)
-
-run:$(EXEC)
-	./$(EXEC)
+	rm -f *.yy.c
+	rm -f *.tab.c
+	rm -f *.tab.h
+	rm -f *.o
+	rm -f *.exe
+	rm -f $(PROGRAMA)
