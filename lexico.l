@@ -1,10 +1,21 @@
 %option noyywrap
+%{
+
+    #include <ast.h>
+    #include <sintatico.tab.h>
+    
+    extern YYSTYPE yylval;
+
+}%
 %%
 "CONSTANT"                  {return CONSTANT;}
 "VALUE"                     {return VALUE;}
 "VARIABLE"                  {return VARIABLE;}
 "GLOBAL"                    {return GLOBAL;}
 "TYPE"          {return TYPE;}
+"void"          {return VOID;}
+"int"           {return INT;}
+"char"          {return CHAR;}
 "FUNCTION"      {return FUNCTION;}
 "RETURN_TYPE"   {return RETURN_TYPE;}
 "END_FUNCTION"  {return END_FUNCTION;}

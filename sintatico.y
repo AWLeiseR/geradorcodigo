@@ -1,6 +1,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include "ast.h"
     extern int yylex();
     extern int auxColune;
     void yyerror(char *s);
@@ -50,8 +51,8 @@
 %token SEMICOLON
 %token COMMA
 %token COLON
-%token L_PAREN
-%token R_PAREN
+%token L_PARENTESE
+%token R_PARENTESE
 %token L_CURLY_BRACKET
 %token R_CURLY_BRACKET
 %token L_SQUARE_BRACKET
@@ -70,3 +71,38 @@
 %start inicio
 
 %%
+
+inicio: constantes variaveis_globais funcoes; 
+<--colocar recursao-->
+constantes: CONSTANTE IDENTIFIER VALUE NUM_INTEGER;
+<--colocar recursao-->
+funcoes: FUNCTION COLLON NOME RETURN_TYPE VARIABLES COMANDOS RETURN END_FUNCTION;
+
+lista_de_comandos: comandos comando_prime
+;
+
+comandos_prime: comandos comandos_prime
+    |
+;
+<--cofirir printf e scanf-->
+comandos: WHILE L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET
+    | IF L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET
+    | PRINTF L_PARENTESE STRING expressao R_PARENTESE
+    | SCANF L_PARENTESE STRING expressao R_PARENTESE
+    |L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET ELSE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET
+    |expressao
+;
+
+expressao: expressao_aditiva
+;
+
+expressao_aditiva: expressao_primaria
+    | expressao_aditiva PLUS expressao_primaria
+    | expressao_aditiva MINUS expressao_primaria
+;
+
+expressao_primaria: IDENTIFIER
+    | NUM_INTEGER
+    | CHARACTER
+    | L_PARENTESE expressao R_PARENTESE
+;
