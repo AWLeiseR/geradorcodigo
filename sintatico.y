@@ -6,6 +6,7 @@
     extern int auxColune;
     void yyerror(char *s);
 %}
+%token FUNCTION
 %token CHARACTER
 %token VOID
 %token INT
@@ -65,6 +66,11 @@
 %token DEFINE
 %token EXIT
 %token IDENTIFIER
+%token RETURN_TYPE
+%token VARIABLE
+%token TYPE
+%token PARAMETER
+%token END_FUNCTION
 
 %token STRING
 
@@ -72,24 +78,30 @@
 
 %%
 
-inicio: constantes variaveis_globais funcoes; 
-<--colocar recursao-->
-constantes: CONSTANTE IDENTIFIER VALUE NUM_INTEGER;
-<--colocar recursao-->
-funcoes: FUNCTION COLLON NOME RETURN_TYPE VARIABLES COMANDOS RETURN END_FUNCTION;
+inicio: funcoes; 
+/* <--colocar recursao--> */
+funcoes: FUNCTION COLON IDENTIFIER funcao_tipo_retorno funcao_parametros funcao_variaveis comandos END_FUNCTION;
 
-lista_de_comandos: comandos comando_prime
+funcao_tipo_retorno: RETURN_TYPE COLON tipos;
+
+funcao_variaveis: 
+    | funcao_variaveis VARIABLE COLON IDENTIFIER TYPE COLON tipos
+;
+
+funcao_parametros:
+    | funcao_parametros PARAMETER COLON IDENTIFIER TYPE COLON tipos
 ;
 
 comandos_prime: comandos comandos_prime
     |
 ;
-<--cofirir printf e scanf-->
-comandos: WHILE L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET
-    | IF L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET
+
+/* <--cofirir printf e scanf--> */
+comandos: WHILE L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET
+    | IF L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET
     | PRINTF L_PARENTESE STRING expressao R_PARENTESE
     | SCANF L_PARENTESE STRING expressao R_PARENTESE
-    |L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET ELSE R_CURLY_BRACKET lista_de_comandos L_CURLY_BRACKET
+    |L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET ELSE R_CURLY_BRACKET comandos L_CURLY_BRACKET
     |expressao
 ;
 
@@ -106,3 +118,17 @@ expressao_primaria: IDENTIFIER
     | CHARACTER
     | L_PARENTESE expressao R_PARENTESE
 ;
+
+tipos: INT;
+    | CHAR;
+    | VOID;
+%%
+
+void yyerror(void *s) {
+    printf("Erro");
+}
+
+int main(int argc, char **argv) {
+    yyparse(0);
+    return 0;
+}

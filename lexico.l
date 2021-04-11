@@ -11,6 +11,7 @@
 "CONSTANT"                  {return CONSTANT;}
 "VALUE"                     {return VALUE;}
 "VARIABLE"                  {return VARIABLE;}
+"PARAMETER"                 {return PARAMETER;}
 "GLOBAL"                    {return GLOBAL;}
 "TYPE"          {return TYPE;}
 "void"          {return VOID;}
@@ -35,7 +36,7 @@
 "*"             {return MULTIPLY;}
 "-"             {return MINUS;}
 "+"             {return PLUS;}
-";"             {return SEMICOLLON;}
+";"             {return SEMICOLON;}
 "{"             {return L_CURLY_BRACKET;}
 "}"             {return R_CURLY_BRACKET;}
 "["             {return L_SQUARE_BRACKET;}
