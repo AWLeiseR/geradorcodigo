@@ -4,80 +4,74 @@
 #include <math.h>
 #include <sintatico.tab.h>
 
-typedef struct {
-    char* nome;
-    int tipo_retorno;
-    parametros *parametros;
-    COMANDOS function_comandos;
-} FUNCTION_STRUCT;
-
-typedef struct {
+struct parametros {
     char* id;
     int tipo;
-    parametros *prox;
-} parametros;
+    Parametros *prox;
+};
 
-typedef struct{
+struct no {
     int tipo;
     //ponteiro para as structs
     expression x;
-}no;
+};
 
-typedef struct{
-    int tipo; // expr ou tipo comando (if, while, for...)
-    Cmd_expressao expr_comandos;
-    IF *cmd_if;
-    PRINTF *cmd_printf;
-    SCANF *cmd_scanf;
-    RETURN *cmd_return;
-    COMANDOS *prox;
-}COMANDOS;
-
-typedef struct{
-    expressao *exp;
-    Cmd_expressao *prox;
-}Cmd_expressao;
-
-typedef struct {
+struct expressao{
     int tipo; //+ - * / % ++ += -- -= ...
     int value;
     char * str;
     int dimensaoArray;
-    expressao *filho_esquerdo;
-    expressao *filho_direito;
-} expressao;
+    Expressao *filho_esquerdo;
+    Expressao *filho_direito;
+};
 
-// typedef struct {
-//     int tipo; //== != <= >=
-//     expressao *filho_esquerdo;
-//     expressao *filho_direito;
-// } expressaoCondicional;
+struct cmd_expressao{
+    Expressao *exp;
+    Cmd_expressao *prox;
+};
 
-typedef struct{
-    expressaoCondicional *exprCond;
-    COMANDOS *comandos_if;
-    COMANDOS *comandos_else;
-}IF_STRUCT;
+struct if_struct{
+    Expressao *exprCond;
+    Comandos *comandos_if;
+    Comandos *comandos_else;
+};
 
-typedef struct{
+struct printf_struct{
     char *string_impressao;
     Cmd_expressao *expressoes;
-}PRINTF_STRUCT;
+};
 
-typedef struct{
+struct scanf_struct{
     int formato;
-   Cmd_expressao *expressoes;
-}SCANF_STRUCT;
-
-typedef struct{
-    int num;
-}NUMBER_STRUCT;
-
-typedef struct {
     Cmd_expressao *expressoes;
-}RETURN_STRUCT;
+};
 
-void analisaAST(tree *t){
+struct number_struct{
+    int num;
+};
+
+struct return_struct{
+    Cmd_expressao *expressoes;
+};
+
+struct comandos{
+    int tipo; // expr ou tipo comando (if, while, for...)
+    Cmd_expressao expr_comandos;
+    If_struct *cmd_if;
+    Printf_struct *cmd_printf;
+    Scanf_struct *cmd_scanf;
+    Return_struct *cmd_return;
+    Comandos *prox;
+};
+
+struct function_struct{
+    char* nome;
+    int tipo_retorno;
+    Parametros *parametros;
+    Comandos function_comandos;
+};
+
+void analisaAST(No *t){
     switch(t->tipo){
         case PLUS:
             break;
@@ -88,7 +82,7 @@ void analisaAST(tree *t){
         case IF:
             break;
         case FUNCTION:
-            break
+            break;
         case PRINTF:
             break;
         case SCANF:
@@ -98,8 +92,8 @@ void analisaAST(tree *t){
     }
 }
 
-no* inserirNo(int tipo){
-    no* treeNode = (no*) malloc(sizeof(no));
+No* inserirNo(int tipo){
+    No* treeNode = (No*) malloc(sizeof(No));
     treeNode->tipo = tipo;
     switch(tipo){
         case PLUS:
@@ -116,7 +110,7 @@ no* inserirNo(int tipo){
             break;
         case FUNCTION:
             //treeNode->x =
-            break
+            break;
         case PRINTF:
             //treeNode->x =
             break;
@@ -126,6 +120,24 @@ no* inserirNo(int tipo){
         default:
             break;
     }
+    return treeNode;
+}
 
-};
+// TreeNode* mallocTree(TreeNode* p1, TreeNode * p3, float value,int type){
+// 	// treenode* p1 = (treenode*) x1;
+// 	// treenode* p3 = (treenode*) x3;
+// 	TreeNode* aux = (TreeNode*)malloc(sizeof(struct node));
+// 	if(type == REAL){
+//         aux->node_type = type;
+//         aux->value = value;
+//         aux->left = NULL;
+//         aux->right = NULL;   
+//     }else {
+// 		aux->node_type = type;
+//     	aux->value = 0;
+//         aux->left = p1;
+//         aux->right = p3;   
+//     }
 
+//     return aux;
+// }

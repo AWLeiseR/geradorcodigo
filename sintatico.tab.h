@@ -1,9 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
-   Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,9 +30,6 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
-
 #ifndef YY_YY_SINTATICO_TAB_H_INCLUDED
 # define YY_YY_SINTATICO_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -60,7 +56,7 @@ extern int yydebug;
     SWITCH = 266,
     CASE = 267,
     DEFAULT = 268,
-    DO = 269,
+    DO_WHILE = 269,
     WHILE = 270,
     FOR = 271,
     IF = 272,
@@ -114,7 +110,10 @@ extern int yydebug;
     TYPE = 320,
     PARAMETER = 321,
     END_FUNCTION = 322,
-    STRING = 323
+    GLOBAL = 323,
+    STRING = 324,
+    VALUE = 325,
+    CONSTANT = 326
   };
 #endif
 

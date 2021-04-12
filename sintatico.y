@@ -3,7 +3,7 @@
     #include <stdlib.h>
     #include "ast.h"
     extern int yylex();
-    extern int auxColune;
+    extern char* yytext;
     void yyerror(char *s);
 %}
 %token FUNCTION
@@ -17,7 +17,7 @@
 %token SWITCH
 %token CASE
 %token DEFAULT
-%token DO
+%token DO_WHILE
 %token WHILE
 %token FOR
 %token IF
@@ -71,64 +71,96 @@
 %token TYPE
 %token PARAMETER
 %token END_FUNCTION
-
+%token GLOBAL
 %token STRING
+%token VALUE
+%token CONSTANT
 
 %start inicio
 
 %%
 
-inicio: funcoes; 
-/* <--colocar recursao--> */
-funcoes: FUNCTION COLON IDENTIFIER funcao_tipo_retorno funcao_parametros funcao_variaveis comandos END_FUNCTION;
+inicio: funcoes { printf("teste");};
 
-funcao_tipo_retorno: RETURN_TYPE COLON tipos;
+/* <--colocar recursao--> */
+funcoes: FUNCTION COLON IDENTIFIER funcao_tipo_retorno funcao_parametros funcao_variaveis comandos return_fun END_FUNCTION {printf("end\n");};
+
+return_fun:RETURN L_PARENTESE NUM_INTEGER R_PARENTESE {printf("\nreturn\n");};
+
+funcao_tipo_retorno: RETURN_TYPE COLON tipos{printf("tip_return\n");};
 
 funcao_variaveis: 
-    | funcao_variaveis VARIABLE COLON IDENTIFIER TYPE COLON tipos
+    | funcao_variaveis VARIABLE COLON IDENTIFIER TYPE COLON tipos {printf("func_var\n");}
 ;
 
 funcao_parametros:
-    | funcao_parametros PARAMETER COLON IDENTIFIER TYPE COLON tipos
-;
-
-comandos_prime: comandos comandos_prime
-    |
+    | funcao_parametros PARAMETER COLON IDENTIFIER TYPE COLON tipos {printf("params\n");}
 ;
 
 /* <--cofirir printf e scanf--> */
-comandos: WHILE L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET
-    | IF L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET
-    | PRINTF L_PARENTESE STRING expressao R_PARENTESE
-    | SCANF L_PARENTESE STRING expressao R_PARENTESE
-    |L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET ELSE R_CURLY_BRACKET comandos L_CURLY_BRACKET
-    |expressao
+comandos: 
+    | comandos WHILE L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET {printf("while\n");}
+    | comandos IF L_PARENTESE expressao COMMA comandos COMMA comandos R_PARENTESE ponto_virgula {printf("if\n");}
+    | comandos IF L_PARENTESE expressao COMMA comandos R_PARENTESE ponto_virgula { printf("if_else\n");}
+    | comandos PRINTF L_PARENTESE STRING COMMA expressao R_PARENTESE ponto_virgula  {printf("printf\n");}
+    | comandos PRINTF L_PARENTESE STRING R_PARENTESE ponto_virgula {printf("\nprintf2\n");}
+    | comandos SCANF L_PARENTESE STRING COMMA BITWISE_AND L_PARENTESE IDENTIFIER R_PARENTESE R_PARENTESE ponto_virgula {printf("scanf\n");}
+    | comandos L_PARENTESE expressao R_PARENTESE R_CURLY_BRACKET comandos L_CURLY_BRACKET ELSE R_CURLY_BRACKET comandos L_CURLY_BRACKET ponto_virgula{printf("alguma coisa \n");}
 ;
 
-expressao: expressao_aditiva
+ponto_virgula: { }
+    | SEMICOLON { }
+    | COMMA {}
 ;
 
-expressao_aditiva: expressao_primaria
-    | expressao_aditiva PLUS expressao_primaria
-    | expressao_aditiva MINUS expressao_primaria
+expressao: 
+    |expressao expressao_aditiva {printf("exp_aditiva\n");}
+    |expressao expressao_comparativa {printf("exp_comp\n");}
+    |expressao expressao_logica {printf("exp_logica\n");}
+    |expressao expressao_multiplicativa {printf("exp_mul\n")};
 ;
 
-expressao_primaria: IDENTIFIER
-    | NUM_INTEGER
-    | CHARACTER
-    | L_PARENTESE expressao R_PARENTESE
+expressao_aditiva: expressao_primaria {printf("expr_primar\n");}
+    | PLUS L_PARENTESE expressao_aditiva COMMA expressao_primaria R_PARENTESE {printf("PLUS op\n");}
+    | MINUS L_PARENTESE expressao_aditiva COMMA expressao_primaria R_PARENTESE {printf("MINUS op\n");}
 ;
 
-tipos: INT;
-    | CHAR;
-    | VOID;
+expressao_comparativa: expressao_primaria
+
+    | GREATER_THAN L_PARENTESE expressao COMMA  expressao R_PARENTESE {printf("greather than");}
+    | GREATER_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {printf("greather equal");}
+    | LESS_THAN L_PARENTESE expressao COMMA  expressao R_PARENTESE {printf("less than");}
+    | LESS_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {printf("less equal");}
+    | EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {printf("equal");}
+    | NOT_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {printf("not equal");}
+;
+
+expressao_logica: expressao_primaria
+    | LOGICAL_AND L_PARENTESE expressao COMMA expressao R_PARENTESE {printf("&&");}
+    | LOGICAL_OR L_PARENTESE expressao COMMA expressao R_PARENTESE {printf("||");}
+;
+
+expressao_multiplicativa: expressao_primaria
+    |MULTIPLY L_PARENTESE expressao COMMA expressao R_PARENTESE {printf("mul");}
+    |DIV L_PARENTESE expressao COMMA expressao R_PARENTESE {printf("div");}
+
+expressao_primaria: IDENTIFIER {printf("identifier\n");}
+    | NUM_INTEGER {printf("num_interger\n");}
+    | CHARACTER {printf("characater\n");}
+    | L_PARENTESE expressao R_PARENTESE {printf("(expression)\n");}
+;
+
+tipos: INT {printf("int \n");}
+    | CHAR {printf("char \n");}
+    | VOID {printf("void \n");}
+;
 %%
 
-void yyerror(void *s) {
-    printf("Erro");
+void yyerror(char *s) {
+    printf("Erro %s",s);
 }
 
 int main(int argc, char **argv) {
-    yyparse(0);
+    yyparse();
     return 0;
 }

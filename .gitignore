@@ -1,0 +1,3 @@
+*.o
+gerador
+lex.yy.c

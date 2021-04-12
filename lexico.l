@@ -3,11 +3,13 @@
 
     #include <ast.h>
     #include <sintatico.tab.h>
-    
-    extern YYSTYPE yylval;
+    char *string_func;
+%}
 
-}%
+%x L_STRING
+
 %%
+"AST -->"                   {}
 "CONSTANT"                  {return CONSTANT;}
 "VALUE"                     {return VALUE;}
 "VARIABLE"                  {return VARIABLE;}
@@ -45,7 +47,7 @@
 ")"             {return R_PARENTESE;}
 "~"             {return BITWISE_NOT;}
 "!"             {return NOT;}
-"&"             {return BITWISE_ANF;}
+"&"             {return BITWISE_AND;}
 "&&"            {return LOGICAL_AND;}
 "-="            {return MINUS_ASSIGN;}
 "+="            {return ADD_ASSIGN;}
@@ -62,9 +64,13 @@
 "|"                             {return BITWISE_OR;}
 "/"                             {return DIV;}
 ","                             {return COMMA;}
-\"(.)*\"                        {return STRING;}
+"\n"                            {}
+[\"]                            {BEGIN L_STRING;}
+<L_STRING>[\"]                  {BEGIN INITIAL; return STRING;}
+<L_STRING>[\"(.)*]               {printf("%s", yytext);}
 [']"\\"?.[']                    {return CHARACTER;}
 [0-9]+                          {return NUM_INTEGER;}
 [_a-zA-Z]+([0-9a-zA-Z]*_*)*     {return IDENTIFIER;}
-" "                             {return SPACE;}
+" "                        {}
+"\t"                        {}
 %%
