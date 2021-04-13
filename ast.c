@@ -37,30 +37,6 @@ struct cmd_expressao{
     Cmd_expressao *prox;
 };
 
-struct if_struct{
-    Expressao *exprCond;
-    Comandos *comandos_if;
-    Comandos *comandos_else;
-};
-
-struct printf_struct{
-    char *string_impressao;
-    Cmd_expressao *expressoes;
-};
-
-struct scanf_struct{
-    char * formato;
-    Cmd_expressao *expressoes;
-};
-
-struct number_struct{
-    int num;
-};
-
-struct return_struct{
-    Cmd_expressao *expressoes;
-};
-
 struct comandos{
     int tipo; // expr ou tipo comando (if, while, for...)
     //if, while,
@@ -68,8 +44,6 @@ struct comandos{
     Cmd_expressao *cmd_if;
     Cmd_expressao *cmd_else;
     Cmd_expressao *cmd_printf;
-    Cmd_expressao *cmd_printf;
-    Cmd_expressao *cmd_scanf;
     Cmd_expressao *cmd_scanf;
     Return_struct *cmd_return;
     Comandos *prox;
@@ -133,17 +107,6 @@ No *novo_no(int tipo, expression x) {
     return novo;
 }
 
-Printf_struct *novoPrintf(char *string_impressao, Cmd_expressao *expressoes) {
-    printf("--%s--",string_impressao);
-    Printf_struct *novo;
-    novo = (Printf_struct *) malloc(sizeof(Printf_struct));
-    char *aux = (char *)malloc(sizeof(char) * (strlen(string_impressao)));
-    strcpy(aux, string_impressao);
-    novo->string_impressao = aux;
-    novo->expressoes = expressoes;
-    return novo;
-}
-
 Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {
     Cmd_expressao *novo;
     novo = (Cmd_expressao *) malloc(sizeof(Cmd_expressao));
@@ -155,7 +118,7 @@ Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {
 Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expressao *filho_esquerdo, Expressao *filho_direito){
     Expressao *novo;
     novo = (Expressao *) malloc(sizeof(Expressao));
-    // novo->tipo = tipo;
+    novo->tipo = tipo;
     // printf("tipo %d", tipo);
     // if (tipo == PLUS || tipo == MINUS || tipo == MULTIPLY || tipo == DIV || tipo == REMAINDER || tipo == LOGICAL_AND || tipo == LOGICAL_OR || tipo == GREATER_THAN || tipo == GREATER_EQUAL || tipo == LESS_THAN || tipo == LESS_EQUAL || tipo == EQUAL || tipo == NOT_EQUAL) {
     //     novo->str = NULL;
@@ -175,18 +138,29 @@ Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expr
     return novo;
 }
 
-Scanf_struct *novoScanf(char *string_impressao, Cmd_expressao *expressoes){
-    Scanf_struct *novo;
-    novo = (Scanf_struct *) malloc(sizeof(Scanf_struct));
-    char * aux = (char*) malloc(sizeof(char)*(strlen(string_impressao)));
-    // strcpy(aux, string_impressao);
-    // novo->formato = aux;
-    // novo->expressoes = expressoes;
+Comandos *cmd_generico(int tipo, Cmd_expressao *exp, Cmd_expressao *cmd1, Cmd_expressao *cmd2){
+    Comandos *novo = (Comandos *)malloc(sizeof(Comandos));
+    novo->tipo = tipo;
+    switch(tipo){
+        case IF: 
+            novo->expr_comandos = exp;
+            novo->cmd_if = cmd1;
+            novo->cmd_else = cmd2;
+            break;
+        case PRINTF:
+            novo->expr_comandos = exp;
+            novo->cmd_printf = cmd1;
+            break;
+        case SCANF:
+            novo->expr_comandos = exp;
+            novo->cmd_scanf= cmd1;
+            break;
+    }
     return novo;
 }
 
-Comandos *cmd_generico(){
-    Comandos *novo = (Comandos *) malloc(sizeof(Comandos));
+void setProxGenerico(Comandos *atual, Comandos *prox) {
+    atual->prox = prox;
 }
 
 Comandos *novoComandos(int tipo, Cmd_expressao expr_comandos, If_struct * cmd_if, Printf_struct * cmd_printf, Scanf_struct * cmd_scanf){
@@ -223,13 +197,5 @@ Variaveis *novaVariavel(char *id, int tipo, Variaveis *prox) {
     // strcpy(novo->id, id);
     // novo->tipo = tipo;
     // novo->prox = prox;
-    return novo;
-}
-
-If_struct *novoIf(Expressao *exprCond, Comandos *comandos_if, Comandos *comandos_else) {
-    If_struct *novo = (If_struct*) malloc(sizeof(If_struct));
-    novo->exprCond = exprCond;
-    novo->comandos_if = comandos_if;
-    novo->comandos_else = comandos_else;
     return novo;
 }

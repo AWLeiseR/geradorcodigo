@@ -129,20 +129,20 @@ lista_comandos: { }
     | lista_comandos comandos { $$ = novoCmdExpressao($2, $1); }
 ;
 
-comandos: if ponto_virgula lista_comandos { $$ = novoComandos(IF, $3, $1, NULL, NULL); }
-    | printf ponto_virgula lista_comandos { $$ = novoComandos(PRINTF, $3, NULL, $1, NULL); }
-    | scanf ponto_virgula lista_comandos { $$ = novoComandos(SCANF, $3, NULL, NULL, $1); }
+comandos: if ponto_virgula lista_comandos { $$ = setProxGenerico($1, $3); }
+    | printf ponto_virgula lista_comandos { $$ = setProxGenerico($1, $3); }
+    | scanf ponto_virgula lista_comandos { $$ = setProxGenerico($1, $3); }
 ;
 
-scanf: SCANF L_PARENTESE expressao_primaria COMMA BITWISE_AND L_PARENTESE expressao_primaria R_PARENTESE R_PARENTESE ponto_virgula {$$ = novoScanf($3, $7);}
+scanf: SCANF L_PARENTESE expressao_primaria COMMA BITWISE_AND L_PARENTESE expressao_primaria R_PARENTESE R_PARENTESE ponto_virgula {$$ = cmd_generico(SCANF,$3, $7,NULL);}
 ;
 
-printf: PRINTF L_PARENTESE expressao_primaria COMMA expressao R_PARENTESE { $$ = novoPrintf($3, $5);}
-    | PRINTF L_PARENTESE expressao_primaria R_PARENTESE {$$ = novoPrintf($3, NULL);}
+printf: PRINTF L_PARENTESE expressao_primaria COMMA expressao R_PARENTESE { $$ = cmd_generico(PRINTF,$3, $5,NULL);}
+    | PRINTF L_PARENTESE expressao_primaria R_PARENTESE {$$ = cmd_generico(PRINTF,$3, NULL,NULL);}
 ;
 
-if: IF L_PARENTESE expressao COMMA comandos COMMA comandos R_PARENTESE { $$ = novoIf($3, $5, $7); }
-    | IF L_PARENTESE expressao COMMA comandos R_PARENTESE { $$ = novoIf($3, $5, NULL); }
+if: IF L_PARENTESE expressao COMMA comandos COMMA comandos R_PARENTESE { $$ = cmd_generico(IF, $3, $5, $7); }
+    | IF L_PARENTESE expressao COMMA comandos R_PARENTESE { $$ = cmd_generico(IF, $3, $5, NULL); }
 ;
 
 ponto_virgula: { }

@@ -1712,49 +1712,49 @@ yyreduce:
 
   case 13:
 #line 132 "sintatico.y"
-                                          { (yyval.comandos) = novoComandos(IF, (yyvsp[0].expressao), (yyvsp[-2].if_struct), NULL, NULL); }
+                                          { (yyval.comandos) = setProxGenerico((yyvsp[-2].if_struct), (yyvsp[0].expressao)); }
 #line 1717 "sintatico.tab.c"
     break;
 
   case 14:
 #line 133 "sintatico.y"
-                                          { (yyval.comandos) = novoComandos(PRINTF, (yyvsp[0].expressao), NULL, (yyvsp[-2].printf_struct), NULL); }
+                                          { (yyval.comandos) = setProxGenerico((yyvsp[-2].printf_struct), (yyvsp[0].expressao)); }
 #line 1723 "sintatico.tab.c"
     break;
 
   case 15:
 #line 134 "sintatico.y"
-                                         { (yyval.comandos) = novoComandos(SCANF, (yyvsp[0].expressao), NULL, NULL, (yyvsp[-2].scanf_struct)); }
+                                         { (yyval.comandos) = setProxGenerico((yyvsp[-2].scanf_struct), (yyvsp[0].expressao)); }
 #line 1729 "sintatico.tab.c"
     break;
 
   case 16:
 #line 137 "sintatico.y"
-                                                                                                                                   {(yyval.scanf_struct) = novoScanf((yyvsp[-7].str), (yyvsp[-3].str));}
+                                                                                                                                   {(yyval.scanf_struct) = cmd_generico(SCANF,(yyvsp[-7].str), (yyvsp[-3].str),NULL);}
 #line 1735 "sintatico.tab.c"
     break;
 
   case 17:
 #line 140 "sintatico.y"
-                                                                          { (yyval.printf_struct) = novoPrintf((yyvsp[-3].str), (yyvsp[-1].expressao));}
+                                                                          { (yyval.printf_struct) = cmd_generico(PRINTF,(yyvsp[-3].str), (yyvsp[-1].expressao),NULL);}
 #line 1741 "sintatico.tab.c"
     break;
 
   case 18:
 #line 141 "sintatico.y"
-                                                        {(yyval.printf_struct) = novoPrintf((yyvsp[-1].str), NULL);}
+                                                        {(yyval.printf_struct) = cmd_generico(PRINTF,(yyvsp[-1].str), NULL,NULL);}
 #line 1747 "sintatico.tab.c"
     break;
 
   case 19:
 #line 144 "sintatico.y"
-                                                                       { (yyval.if_struct) = novoIf((yyvsp[-5].expressao), (yyvsp[-3].comandos), (yyvsp[-1].comandos)); }
+                                                                       { (yyval.if_struct) = cmd_generico(IF, (yyvsp[-5].expressao), (yyvsp[-3].comandos), (yyvsp[-1].comandos)); }
 #line 1753 "sintatico.tab.c"
     break;
 
   case 20:
 #line 145 "sintatico.y"
-                                                          { (yyval.if_struct) = novoIf((yyvsp[-3].expressao), (yyvsp[-1].comandos), NULL); }
+                                                          { (yyval.if_struct) = cmd_generico(IF, (yyvsp[-3].expressao), (yyvsp[-1].comandos), NULL); }
 #line 1759 "sintatico.tab.c"
     break;
 
