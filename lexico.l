@@ -4,6 +4,7 @@
     #include <ast.h>
     #include <sintatico.tab.h>
     char *string_func;
+    extern int yylex();
 %}
 
 %x L_STRING
@@ -65,9 +66,7 @@
 "/"                             {return DIV;}
 ","                             {return COMMA;}
 "\n"                            {}
-[\"]                            {BEGIN L_STRING;}
-<L_STRING>[\"]                  {BEGIN INITIAL; return STRING;}
-<L_STRING>[\"(.)*]               {printf("%s", yytext);}
+["]([^"\\\n]|\\.|\\\n)*["]      {return STRING;}
 [']"\\"?.[']                    {return CHARACTER;}
 [0-9]+                          {return NUM_INTEGER;}
 [_a-zA-Z]+([0-9a-zA-Z]*_*)*     {return IDENTIFIER;}

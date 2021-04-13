@@ -2,7 +2,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <sintatico.tab.h>
+#include "sintatico.tab.h"
+#include <string.h>
+
+struct no {
+    int tipo;
+    //ponteiro para as structs
+    expression x;
+};
 
 struct parametros {
     char* id;
@@ -10,10 +17,10 @@ struct parametros {
     Parametros *prox;
 };
 
-struct no {
+struct variaveis{
     int tipo;
-    //ponteiro para as structs
-    expression x;
+    char *id;   
+    Variaveis *prox;
 };
 
 struct expressao{
@@ -42,7 +49,7 @@ struct printf_struct{
 };
 
 struct scanf_struct{
-    int formato;
+    char * formato;
     Cmd_expressao *expressoes;
 };
 
@@ -56,10 +63,14 @@ struct return_struct{
 
 struct comandos{
     int tipo; // expr ou tipo comando (if, while, for...)
-    Cmd_expressao expr_comandos;
-    If_struct *cmd_if;
-    Printf_struct *cmd_printf;
-    Scanf_struct *cmd_scanf;
+    //if, while,
+    Cmd_expressao *expr_comandos;
+    Cmd_expressao *cmd_if;
+    Cmd_expressao *cmd_else;
+    Cmd_expressao *cmd_printf;
+    Cmd_expressao *cmd_printf;
+    Cmd_expressao *cmd_scanf;
+    Cmd_expressao *cmd_scanf;
     Return_struct *cmd_return;
     Comandos *prox;
 };
@@ -68,76 +79,157 @@ struct function_struct{
     char* nome;
     int tipo_retorno;
     Parametros *parametros;
-    Comandos function_comandos;
+    Variaveis *variaveis;
+    Cmd_expressao *function_comandos;
 };
 
 void analisaAST(No *t){
     switch(t->tipo){
         case PLUS:
+
             break;
         case MINUS: 
+
             break;
         case DIV: 
+
             break;
         case IF:
+
             break;
         case FUNCTION:
+
             break;
         case PRINTF:
+
             break;
         case SCANF:
+
             break;
         default:
         break;
     }
 }
 
-No* inserirNo(int tipo){
+No* inserirNo(int tipo /*,colocar outros ponteiros/parametros*/){
     No* treeNode = (No*) malloc(sizeof(No));
     treeNode->tipo = tipo;
-    switch(tipo){
-        case PLUS:
-            //treeNode->x =
-            break;
-        case MINUS: 
-            //treeNode->x =
-            break;
-        case DIV: 
-            //treeNode->x =
-            break;
-        case IF:
-            //treeNode->x =
-            break;
-        case FUNCTION:
-            //treeNode->x =
-            break;
-        case PRINTF:
-            //treeNode->x =
-            break;
-        case SCANF:
-            //treeNode->x =
-            break;
-        default:
-            break;
-    }
+    //se comando IF, printf, scanf, return -> fazer algo
+    // if(tipo == IF || tipo == PRINTF || tipo == SCANF || tipo == RETURN){
+
+    // }else{
+
+    // }
+    //operações de adição, comparacao e logica fazer de outro jeito
+   
     return treeNode;
 }
 
-// TreeNode* mallocTree(TreeNode* p1, TreeNode * p3, float value,int type){
-// 	// treenode* p1 = (treenode*) x1;
-// 	// treenode* p3 = (treenode*) x3;
-// 	TreeNode* aux = (TreeNode*)malloc(sizeof(struct node));
-// 	if(type == REAL){
-//         aux->node_type = type;
-//         aux->value = value;
-//         aux->left = NULL;
-//         aux->right = NULL;   
-//     }else {
-// 		aux->node_type = type;
-//     	aux->value = 0;
-//         aux->left = p1;
-//         aux->right = p3;   
-//     }
+No *novo_no(int tipo, expression x) {
+    No *novo;
+    novo = (No *) malloc(sizeof(No));
+    novo->tipo = tipo;
+    novo->x = x;
+    return novo;
+}
 
-//     return aux;
-// }
+Printf_struct *novoPrintf(char *string_impressao, Cmd_expressao *expressoes) {
+    printf("--%s--",string_impressao);
+    Printf_struct *novo;
+    novo = (Printf_struct *) malloc(sizeof(Printf_struct));
+    char *aux = (char *)malloc(sizeof(char) * (strlen(string_impressao)));
+    strcpy(aux, string_impressao);
+    novo->string_impressao = aux;
+    novo->expressoes = expressoes;
+    return novo;
+}
+
+Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {
+    Cmd_expressao *novo;
+    novo = (Cmd_expressao *) malloc(sizeof(Cmd_expressao));
+    novo->exp = exp;
+    novo->prox = prox;
+    return novo;
+}
+
+Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expressao *filho_esquerdo, Expressao *filho_direito){
+    Expressao *novo;
+    novo = (Expressao *) malloc(sizeof(Expressao));
+    // novo->tipo = tipo;
+    // printf("tipo %d", tipo);
+    // if (tipo == PLUS || tipo == MINUS || tipo == MULTIPLY || tipo == DIV || tipo == REMAINDER || tipo == LOGICAL_AND || tipo == LOGICAL_OR || tipo == GREATER_THAN || tipo == GREATER_EQUAL || tipo == LESS_THAN || tipo == LESS_EQUAL || tipo == EQUAL || tipo == NOT_EQUAL) {
+    //     novo->str = NULL;
+    //     novo->filho_esquerdo = filho_esquerdo;
+    //     novo->filho_direito = filho_direito;
+    // }else if (tipo == INC || tipo == DEC || tipo == ADD_ASSIGN || tipo == MINUS_ASSIGN){
+    //     novo->str = NULL;
+    //     novo->filho_esquerdo = filho_esquerdo;
+    //     novo->filho_direito = NULL;
+    // } else if (tipo == NUM_INTEGER || tipo == IDENTIFIER || tipo == STRING) {
+    //     strcpy(novo->str, str);
+    //     novo->filho_direito = NULL;
+    //     novo->filho_esquerdo = NULL;
+    // }
+    // novo->value = value;
+    // novo->dimensaoArray = dimensaoArray;
+    return novo;
+}
+
+Scanf_struct *novoScanf(char *string_impressao, Cmd_expressao *expressoes){
+    Scanf_struct *novo;
+    novo = (Scanf_struct *) malloc(sizeof(Scanf_struct));
+    char * aux = (char*) malloc(sizeof(char)*(strlen(string_impressao)));
+    // strcpy(aux, string_impressao);
+    // novo->formato = aux;
+    // novo->expressoes = expressoes;
+    return novo;
+}
+
+Comandos *cmd_generico(){
+    Comandos *novo = (Comandos *) malloc(sizeof(Comandos));
+}
+
+Comandos *novoComandos(int tipo, Cmd_expressao expr_comandos, If_struct * cmd_if, Printf_struct * cmd_printf, Scanf_struct * cmd_scanf){
+    Comandos *novo = (Comandos*) malloc(sizeof(Comandos));
+    // novo->tipo = tipo;
+    // novo->expr_comandos = expr_comandos;
+    // novo->cmd_if = cmd_if;
+    // novo->cmd_printf = cmd_printf;
+    // novo->cmd_scanf = cmd_scanf;
+    // novo->cmd_return = cmd_return;
+    return novo;
+}
+
+Function_struct *novaFunction(char *nome, int tipo_retorno, Parametros *parametros, Variaveis *variaveis, Cmd_expressao *function_comandos) {
+    Function_struct *novo = (Function_struct *) malloc(sizeof(Function_struct));
+    // strcpy(novo->nome, nome);
+    // novo->tipo_retorno = tipo_retorno;
+    // novo->parametros = parametros;
+    // novo->variaveis = variaveis;
+    // novo->function_comandos = function_comandos;
+    return novo;
+}
+
+Parametros *novoParametro(char *id, int tipo, Parametros *prox) {
+    Parametros *novo = (Parametros *) malloc(sizeof(Parametros));
+    // strcpy(novo->id, id);
+    // novo->tipo = tipo;
+    // novo->prox = prox;
+    return novo;
+}
+
+Variaveis *novaVariavel(char *id, int tipo, Variaveis *prox) {
+    Variaveis *novo = (Variaveis *) malloc(sizeof(Variaveis));
+    // strcpy(novo->id, id);
+    // novo->tipo = tipo;
+    // novo->prox = prox;
+    return novo;
+}
+
+If_struct *novoIf(Expressao *exprCond, Comandos *comandos_if, Comandos *comandos_else) {
+    If_struct *novo = (If_struct*) malloc(sizeof(If_struct));
+    novo->exprCond = exprCond;
+    novo->comandos_if = comandos_if;
+    novo->comandos_else = comandos_else;
+    return novo;
+}
