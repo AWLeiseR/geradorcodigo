@@ -12,6 +12,7 @@
 %union {
     char *str;
     int num;
+    float real;
     Parametros *parametros;
     Variaveis *variaveis;
     Cmd_expressao *expressao;
@@ -92,7 +93,7 @@
 
 %type <lista_funcoes> inicio
 %type <lista_funcoes> funcao
-%type <num> tipos funcao_tipo_retorno
+%type <num> tipos funcao_tipo_retorno NUM_INTEGER
 %type <parametros> funcao_parametros
 %type <variaveis> funcao_variaveis
 %type <expr> expressao return_fun
@@ -107,17 +108,17 @@
 
 %%
 
-inicio: funcao {AST = $1;};
+inicio: funcao {AST = $1; imprimiAST(AST);};
 
 funcao: {$$ = NULL;}
-    | funcao FUNCTION COLON expressao_primaria funcao_tipo_retorno funcao_parametros funcao_variaveis lista_comandos return_fun END_FUNCTION {$$ = novaFunction($4, $5, $9, $6, $7, $8, $1); }
+    | funcao FUNCTION COLON expressao_primaria funcao_tipo_retorno funcao_parametros funcao_variaveis lista_comandos return_fun END_FUNCTION {$$ = novaFunction($4, $5, $9, $6, $7, $8, $1);}
 ;
 
-return_fun: RETURN L_PARENTESE expressao R_PARENTESE {$$ = novaExpressao(RETURN,0,NULL,0,$3,NULL);};
+return_fun: RETURN L_PARENTESE expressao R_PARENTESE {$$ = novaExpressao(RETURN,0,NULL,0,$3,NULL,0);};
 
 funcao_tipo_retorno: RETURN_TYPE COLON tipos{$$ = $3;};
 
-funcao_variaveis: {$$ = NULL ;}
+funcao_variaveis: {$$ = NULL;}
     | funcao_variaveis VARIABLE COLON expressao_primaria TYPE COLON tipos {$$ = novaVariavel($4, $7, $1);}
 ;
 
@@ -152,25 +153,25 @@ ponto_virgula: { }
 
 expressao: {$$ = NULL; }
     | expressao_primaria {$$ = $1;}
-    | PLUS L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(PLUS,0,NULL,0,$3,$5);}
-    | MINUS L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(MINUS,0,NULL,0,$3,$5);}
-    | GREATER_THAN L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(GREATER_THAN,0,NULL,0,$3,$5);}
-    | GREATER_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(GREATER_EQUAL,0,NULL,0,$3,$5);}
-    | LESS_THAN L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(LESS_THAN,0,NULL,0,$3,$5);}
-    | LESS_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(LESS_EQUAL,0,NULL,0,$3,$5);}
-    | EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(EQUAL,0,NULL,0,$3,$5);}
-    | NOT_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(NOT_EQUAL,0,NULL,0,$3,$5);}
-    | LOGICAL_AND L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(LOGICAL_AND,0,NULL,0,$3,$5);}
-    | LOGICAL_OR L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(LOGICAL_OR,0,NULL,0,$3,$5);}
-    | MULTIPLY L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(MULTIPLY,0,NULL,0,$3,$5);}
-    | DIV L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(DIV,0,NULL,0,$3,$5);}
+    | PLUS L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(PLUS,0,NULL,0,$3,$5,0);}
+    | MINUS L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(MINUS,0,NULL,0,$3,$5,0);}
+    | GREATER_THAN L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(GREATER_THAN,0,NULL,0,$3,$5,0);}
+    | GREATER_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(GREATER_EQUAL,0,NULL,0,$3,$5,0);}
+    | LESS_THAN L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(LESS_THAN,0,NULL,0,$3,$5,0);}
+    | LESS_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(LESS_EQUAL,0,NULL,0,$3,$5,0);}
+    | EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(EQUAL,0,NULL,0,$3,$5,0);}
+    | NOT_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(NOT_EQUAL,0,NULL,0,$3,$5,0);}
+    | LOGICAL_AND L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(LOGICAL_AND,0,NULL,0,$3,$5,0);}
+    | LOGICAL_OR L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(LOGICAL_OR,0,NULL,0,$3,$5,0);}
+    | MULTIPLY L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(MULTIPLY,0,NULL,0,$3,$5,0);}
+    | DIV L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(DIV,0,NULL,0,$3,$5,0);}
 ;
 
-expressao_primaria: IDENTIFIER { $$ = novaExpressao(IDENTIFIER,0,yytext,0,NULL,NULL);}
-    | NUM_INTEGER {}
-    | CHARACTER {}
+expressao_primaria: IDENTIFIER { $$ = novaExpressao(IDENTIFIER,0,yytext,0,NULL,NULL,0);}
+    | NUM_INTEGER {$$ = novaExpressao(NUM_INTEGER,0,NULL,0,NULL,NULL,$1);}
+    | CHARACTER { printf("entrou aqui\n");}
     | L_PARENTESE expressao R_PARENTESE {}
-    | STRING {$$ = novaExpressao(STRING,0,yytext,0,NULL,NULL);}
+    | STRING {$$ = novaExpressao(STRING,0,yytext,0,NULL,NULL,0);}
 ;
 
 tipos: INT {$$ = INT; }

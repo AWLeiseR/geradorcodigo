@@ -189,6 +189,7 @@ union YYSTYPE
 
     char *str;
     int num;
+    float real;
     Parametros *parametros;
     Variaveis *variaveis;
     Cmd_expressao *expressao;
@@ -196,7 +197,7 @@ union YYSTYPE
     Expressao *expr;
     Function_struct *lista_funcoes;
 
-#line 200 "sintatico.tab.c" /* yacc.c:355  */
+#line 201 "sintatico.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -213,7 +214,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 217 "sintatico.tab.c" /* yacc.c:358  */
+#line 218 "sintatico.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -517,11 +518,11 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,   110,   110,   112,   113,   116,   118,   120,   121,   124,
-     125,   128,   129,   132,   133,   134,   137,   140,   141,   144,
-     145,   148,   149,   150,   153,   154,   155,   156,   157,   158,
-     159,   160,   161,   162,   163,   164,   165,   166,   169,   170,
-     171,   172,   173,   176,   177,   178
+       0,   111,   111,   113,   114,   117,   119,   121,   122,   125,
+     126,   129,   130,   133,   134,   135,   138,   141,   142,   145,
+     146,   149,   150,   151,   154,   155,   156,   157,   158,   159,
+     160,   161,   162,   163,   164,   165,   166,   167,   170,   171,
+     172,   173,   174,   177,   178,   179
 };
 #endif
 
@@ -1392,271 +1393,271 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 110 "sintatico.y" /* yacc.c:1646  */
-    {AST = (yyvsp[0].lista_funcoes);}
-#line 1398 "sintatico.tab.c" /* yacc.c:1646  */
+#line 111 "sintatico.y" /* yacc.c:1646  */
+    {AST = (yyvsp[0].lista_funcoes); imprimiAST(AST);}
+#line 1399 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 112 "sintatico.y" /* yacc.c:1646  */
+#line 113 "sintatico.y" /* yacc.c:1646  */
     {(yyval.lista_funcoes) = NULL;}
-#line 1404 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1405 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 113 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.lista_funcoes) = novaFunction((yyvsp[-6].expr), (yyvsp[-5].num), (yyvsp[-1].expr), (yyvsp[-4].parametros), (yyvsp[-3].variaveis), (yyvsp[-2].comandos), (yyvsp[-9].lista_funcoes)); }
-#line 1410 "sintatico.tab.c" /* yacc.c:1646  */
+#line 114 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.lista_funcoes) = novaFunction((yyvsp[-6].expr), (yyvsp[-5].num), (yyvsp[-1].expr), (yyvsp[-4].parametros), (yyvsp[-3].variaveis), (yyvsp[-2].comandos), (yyvsp[-9].lista_funcoes));}
+#line 1411 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 116 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(RETURN,0,NULL,0,(yyvsp[-1].expr),NULL);}
-#line 1416 "sintatico.tab.c" /* yacc.c:1646  */
+#line 117 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(RETURN,0,NULL,0,(yyvsp[-1].expr),NULL,0);}
+#line 1417 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 118 "sintatico.y" /* yacc.c:1646  */
+#line 119 "sintatico.y" /* yacc.c:1646  */
     {(yyval.num) = (yyvsp[0].num);}
-#line 1422 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1423 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 120 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.variaveis) = NULL ;}
-#line 1428 "sintatico.tab.c" /* yacc.c:1646  */
+#line 121 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.variaveis) = NULL;}
+#line 1429 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 121 "sintatico.y" /* yacc.c:1646  */
+#line 122 "sintatico.y" /* yacc.c:1646  */
     {(yyval.variaveis) = novaVariavel((yyvsp[-3].expr), (yyvsp[0].num), (yyvsp[-6].variaveis));}
-#line 1434 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1435 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 124 "sintatico.y" /* yacc.c:1646  */
+#line 125 "sintatico.y" /* yacc.c:1646  */
     { (yyval.parametros) = NULL;}
-#line 1440 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1441 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 125 "sintatico.y" /* yacc.c:1646  */
+#line 126 "sintatico.y" /* yacc.c:1646  */
     {(yyval.parametros) = novoParametro((yyvsp[-3].expr), (yyvsp[0].num), (yyvsp[-6].parametros));}
-#line 1446 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1447 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 128 "sintatico.y" /* yacc.c:1646  */
+#line 129 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = NULL; }
-#line 1452 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1453 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 129 "sintatico.y" /* yacc.c:1646  */
+#line 130 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = setProxGenerico((yyvsp[0].comandos),(yyvsp[-1].comandos));}
-#line 1458 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1459 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 132 "sintatico.y" /* yacc.c:1646  */
+#line 133 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = setProxGenerico((yyvsp[-2].comandos),(yyvsp[0].comandos) );}
-#line 1464 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1465 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 133 "sintatico.y" /* yacc.c:1646  */
+#line 134 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = setProxGenerico((yyvsp[-2].comandos),(yyvsp[0].comandos) );}
-#line 1470 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1471 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 134 "sintatico.y" /* yacc.c:1646  */
+#line 135 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = setProxGenerico((yyvsp[-2].comandos),(yyvsp[0].comandos) );}
-#line 1476 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1477 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 137 "sintatico.y" /* yacc.c:1646  */
+#line 138 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = cmd_generico(PRINTF, (yyvsp[-7].expr),NULL, NULL,(yyvsp[-3].expr));}
-#line 1482 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1483 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 140 "sintatico.y" /* yacc.c:1646  */
+#line 141 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = cmd_generico(PRINTF, (yyvsp[-3].expr),NULL, NULL,(yyvsp[-1].expr));}
-#line 1488 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1489 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 141 "sintatico.y" /* yacc.c:1646  */
+#line 142 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = cmd_generico(PRINTF, (yyvsp[-1].expr), NULL, NULL,NULL);}
-#line 1494 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1495 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 144 "sintatico.y" /* yacc.c:1646  */
+#line 145 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = cmd_generico(IF, (yyvsp[-5].expr), (yyvsp[-3].comandos), (yyvsp[-1].comandos),NULL);}
-#line 1500 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1501 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 145 "sintatico.y" /* yacc.c:1646  */
+#line 146 "sintatico.y" /* yacc.c:1646  */
     {(yyval.comandos) = cmd_generico(IF, (yyvsp[-3].expr), (yyvsp[-1].comandos), NULL, NULL);}
-#line 1506 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1507 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 148 "sintatico.y" /* yacc.c:1646  */
+#line 149 "sintatico.y" /* yacc.c:1646  */
     { }
-#line 1512 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1513 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 149 "sintatico.y" /* yacc.c:1646  */
+#line 150 "sintatico.y" /* yacc.c:1646  */
     { }
-#line 1518 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1519 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 150 "sintatico.y" /* yacc.c:1646  */
+#line 151 "sintatico.y" /* yacc.c:1646  */
     {}
-#line 1524 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1525 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 153 "sintatico.y" /* yacc.c:1646  */
+#line 154 "sintatico.y" /* yacc.c:1646  */
     {(yyval.expr) = NULL; }
-#line 1530 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1531 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 154 "sintatico.y" /* yacc.c:1646  */
+#line 155 "sintatico.y" /* yacc.c:1646  */
     {(yyval.expr) = (yyvsp[0].expr);}
-#line 1536 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1537 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 155 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(PLUS,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1542 "sintatico.tab.c" /* yacc.c:1646  */
+#line 156 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(PLUS,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1543 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 156 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(MINUS,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1548 "sintatico.tab.c" /* yacc.c:1646  */
+#line 157 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(MINUS,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1549 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 157 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(GREATER_THAN,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1554 "sintatico.tab.c" /* yacc.c:1646  */
+#line 158 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(GREATER_THAN,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1555 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 158 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(GREATER_EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1560 "sintatico.tab.c" /* yacc.c:1646  */
+#line 159 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(GREATER_EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1561 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 159 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(LESS_THAN,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1566 "sintatico.tab.c" /* yacc.c:1646  */
+#line 160 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(LESS_THAN,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1567 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 160 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(LESS_EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1572 "sintatico.tab.c" /* yacc.c:1646  */
+#line 161 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(LESS_EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1573 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 161 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1578 "sintatico.tab.c" /* yacc.c:1646  */
+#line 162 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1579 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 162 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(NOT_EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1584 "sintatico.tab.c" /* yacc.c:1646  */
+#line 163 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(NOT_EQUAL,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1585 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 163 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(LOGICAL_AND,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1590 "sintatico.tab.c" /* yacc.c:1646  */
+#line 164 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(LOGICAL_AND,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1591 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 164 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(LOGICAL_OR,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1596 "sintatico.tab.c" /* yacc.c:1646  */
+#line 165 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(LOGICAL_OR,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1597 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 36:
-#line 165 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(MULTIPLY,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1602 "sintatico.tab.c" /* yacc.c:1646  */
+#line 166 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(MULTIPLY,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1603 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 37:
-#line 166 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(DIV,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr));}
-#line 1608 "sintatico.tab.c" /* yacc.c:1646  */
+#line 167 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(DIV,0,NULL,0,(yyvsp[-3].expr),(yyvsp[-1].expr),0);}
+#line 1609 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 169 "sintatico.y" /* yacc.c:1646  */
-    { (yyval.expr) = novaExpressao(IDENTIFIER,0,yytext,0,NULL,NULL);}
-#line 1614 "sintatico.tab.c" /* yacc.c:1646  */
+#line 170 "sintatico.y" /* yacc.c:1646  */
+    { (yyval.expr) = novaExpressao(IDENTIFIER,0,yytext,0,NULL,NULL,0);}
+#line 1615 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 170 "sintatico.y" /* yacc.c:1646  */
-    {}
-#line 1620 "sintatico.tab.c" /* yacc.c:1646  */
+#line 171 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(NUM_INTEGER,0,NULL,0,NULL,NULL,(yyvsp[0].num));}
+#line 1621 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 171 "sintatico.y" /* yacc.c:1646  */
-    {}
-#line 1626 "sintatico.tab.c" /* yacc.c:1646  */
+#line 172 "sintatico.y" /* yacc.c:1646  */
+    { printf("entrou aqui\n");}
+#line 1627 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 172 "sintatico.y" /* yacc.c:1646  */
+#line 173 "sintatico.y" /* yacc.c:1646  */
     {}
-#line 1632 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1633 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 173 "sintatico.y" /* yacc.c:1646  */
-    {(yyval.expr) = novaExpressao(STRING,0,yytext,0,NULL,NULL);}
-#line 1638 "sintatico.tab.c" /* yacc.c:1646  */
+#line 174 "sintatico.y" /* yacc.c:1646  */
+    {(yyval.expr) = novaExpressao(STRING,0,yytext,0,NULL,NULL,0);}
+#line 1639 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 176 "sintatico.y" /* yacc.c:1646  */
+#line 177 "sintatico.y" /* yacc.c:1646  */
     {(yyval.num) = INT; }
-#line 1644 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1645 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 177 "sintatico.y" /* yacc.c:1646  */
+#line 178 "sintatico.y" /* yacc.c:1646  */
     {(yyval.num) = CHAR; }
-#line 1650 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1651 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 178 "sintatico.y" /* yacc.c:1646  */
+#line 179 "sintatico.y" /* yacc.c:1646  */
     {(yyval.num) = VOID; }
-#line 1656 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1657 "sintatico.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1660 "sintatico.tab.c" /* yacc.c:1646  */
+#line 1661 "sintatico.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1884,7 +1885,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 180 "sintatico.y" /* yacc.c:1906  */
+#line 181 "sintatico.y" /* yacc.c:1906  */
 
 
 void yyerror(char *s) {

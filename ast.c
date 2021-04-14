@@ -20,6 +20,7 @@ struct variaveis{
 struct expressao{
     int tipo; //+ - * / % ++ += -- -= ...
     int value;
+    float valueFloat;
     char * str;
     int dimensaoArray;
     Expressao *filho_esquerdo;
@@ -44,7 +45,7 @@ struct comandos{
 };
 
 struct function_struct{
-    Expressao nome;
+    Expressao *nome;
     int tipo_retorno;
     Expressao *exp_retorno;
     Parametros *parametros;
@@ -53,6 +54,33 @@ struct function_struct{
     Function_struct * prox;
 };
 
+void imprimiAST(Function_struct *f){
+    Expressao *n =(Expressao*) f->nome;
+    Expressao *r = f->exp_retorno;
+    Variaveis *p = f->variaveis;
+    Variaveis *aux = p;
+    printf("function: %s return: %d\n",n->str,f->tipo_retorno);
+    printf("expressão retorno - %f\n",r->filho_esquerdo->valueFloat);
+    while (aux->prox !=NULL){
+        Expressao *nomeVar= aux->id;
+        printf("variveis = %s tipo=%d\n",nomeVar->str,aux->tipo);
+        aux = aux->prox;
+    }
+    
+}
+
+void imprimeCmd(Comandos *lista){
+    Comandos *aux = lista;
+    switch(aux->tipo){
+        case WHILE:
+        case IF:
+        case PRINTF:
+        case SCANF:
+        default:
+            printf("%d\n",aux->tipo);
+        break;
+    }
+}
 
 Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {
     Cmd_expressao *novo;
@@ -62,18 +90,20 @@ Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {
     return novo;
 }
 
-Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expressao *filho_esquerdo, Expressao *filho_direito){
+Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expressao *filho_esquerdo, Expressao *filho_direito, float valueFloat){
     Expressao *novo;
     novo = (Expressao *) malloc(sizeof(Expressao));
     novo->tipo = tipo;
+    novo->filho_direito = filho_direito;
+    novo->filho_esquerdo = filho_esquerdo;
     if(tipo == IDENTIFIER || tipo == STRING){
         char *aux = (char*) malloc(sizeof(strlen(str))+4);
         strcpy(aux,str);
         novo->str = aux;
+    }else if(tipo == NUM_INTEGER){
+        novo->valueFloat = valueFloat;
     }
     
-    novo->filho_direito = filho_direito;
-    novo->filho_esquerdo = filho_direito;
     // novo->value = value;
     // novo->dimensaoArray = dimensaoArray;
     return novo;
@@ -107,11 +137,14 @@ Comandos* setProxGenerico(Comandos *atual, Comandos *prox) {
 
 Function_struct *novaFunction(Expressao *nome, int tipo_retorno, Expressao *exp_retorno, Parametros *parametros, Variaveis *variaveis, Comandos *function_comandos, Function_struct *proximo) {
     Function_struct *novo = (Function_struct *) malloc(sizeof(Function_struct));
-    printf("%s\n",nome->str);
-    // novo->tipo_retorno = tipo_retorno;
-    // novo->parametros = parametros;
-    // novo->variaveis = variaveis;
-    // novo->function_comandos = function_comandos;
+    novo->nome = nome;
+    novo->tipo_retorno = tipo_retorno;
+    novo->parametros = parametros;
+
+    novo->variaveis = variaveis;
+    printf("%d\n",novo->variaveis->tipo);
+    novo->exp_retorno = exp_retorno;
+    novo->function_comandos = function_comandos;
     novo->prox = proximo;
     return novo;
 }

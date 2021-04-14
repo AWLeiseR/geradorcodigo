@@ -13,7 +13,7 @@
     
     Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox);
     
-    Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expressao *filho_esquerdo, Expressao *filho_direito);
+    Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expressao *filho_esquerdo, Expressao *filho_direito, float valueFloat);
     
     Function_struct *novaFunction(Expressao *nome, int tipo_retorno, Expressao *exp_retorno, Parametros *parametros, Variaveis *variaveis, Comandos *function_comandos, Function_struct *proximo);
     
@@ -24,4 +24,6 @@
     Comandos *cmd_generico(int tipo, Expressao *exp, Comandos *cmd1, Comandos *cmd2, Expressao *exp2);
     
     Comandos* setProxGenerico(Comandos *atual, Comandos *prox) ;
+
+    void imprimiAST(Function_struct *f);
 #endif

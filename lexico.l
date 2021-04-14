@@ -68,7 +68,7 @@
 "\n"                            {}
 ["]([^"\\\n]|\\.|\\\n)*["]      {return STRING;}
 [']"\\"?.[']                    {return CHARACTER;}
-[0-9]+                          {return NUM_INTEGER;}
+[0-9]+                          {yylval.real = atof(yytext); return NUM_INTEGER;}
 [_a-zA-Z]+([0-9a-zA-Z]*_*)*     {return IDENTIFIER;}
 " "                        {}
 "\t"                        {}

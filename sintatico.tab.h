@@ -126,6 +126,7 @@ union YYSTYPE
 
     char *str;
     int num;
+    float real;
     Parametros *parametros;
     Variaveis *variaveis;
     Cmd_expressao *expressao;
@@ -133,7 +134,7 @@ union YYSTYPE
     Expressao *expr;
     Function_struct *lista_funcoes;
 
-#line 137 "sintatico.tab.h" /* yacc.c:1909  */
+#line 138 "sintatico.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
