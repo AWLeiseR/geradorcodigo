@@ -4,6 +4,7 @@
 #include <math.h>
 #include "sintatico.tab.h"
 #include <string.h>
+#include "funcoes.h"
 
 struct parametros {
     int tipo;
@@ -54,32 +55,45 @@ struct function_struct{
     Function_struct * prox;
 };
 
+void imprimeExpressao(Expressao *exp){
+    Expressao *aux = exp;
+    if(aux){
+        imprimeExpressao(aux->filho_direito);
+        imprimeExpressao(aux->filho_esquerdo);
+        if(aux->tipo == NUM_INTEGER){
+            printf("--aux %f\n",aux->valueFloat);
+        }else if(aux->tipo == STRING){
+            printf("--aux %s\n",aux->str);
+
+        }else{
+            printf("--aux %d\n",aux->tipo);
+        }
+    }
+    
+}
+
 void imprimiAST(Function_struct *f){
     Expressao *n =(Expressao*) f->nome;
     Expressao *r = f->exp_retorno;
     Variaveis *p = f->variaveis;
     Variaveis *aux = p;
+    Comandos *c = f->function_comandos;
+    Comandos *auxC = c;
+    //imprimiprintf();
     printf("function: %s return: %d\n",n->str,f->tipo_retorno);
     printf("expressão retorno - %f\n",r->filho_esquerdo->valueFloat);
-    while (aux->prox !=NULL){
+    while (aux !=NULL){
         Expressao *nomeVar= aux->id;
         printf("variveis = %s tipo=%d\n",nomeVar->str,aux->tipo);
         aux = aux->prox;
     }
-    
-}
-
-void imprimeCmd(Comandos *lista){
-    Comandos *aux = lista;
-    switch(aux->tipo){
-        case WHILE:
-        case IF:
-        case PRINTF:
-        case SCANF:
-        default:
-            printf("%d\n",aux->tipo);
-        break;
+    while (auxC != NULL){
+        printf("%d\n",auxC->tipo);
+        imprimeExpressao(auxC->expr_comandos);
+        auxC = auxC->prox;
     }
+    
+    
 }
 
 Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {

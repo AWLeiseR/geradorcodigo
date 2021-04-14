@@ -99,7 +99,7 @@
 %type <expr> expressao return_fun
 %type <expr> expressao_primaria
 %type <comandos> comandos
-%type <comandos> lista_comandos
+
 %type <comandos> if
 %type <comandos> printf
 %type <comandos> scanf
@@ -111,7 +111,7 @@
 inicio: funcao {AST = $1; imprimiAST(AST);};
 
 funcao: {$$ = NULL;}
-    | funcao FUNCTION COLON expressao_primaria funcao_tipo_retorno funcao_parametros funcao_variaveis lista_comandos return_fun END_FUNCTION {$$ = novaFunction($4, $5, $9, $6, $7, $8, $1);}
+    | funcao FUNCTION COLON expressao_primaria funcao_tipo_retorno funcao_parametros funcao_variaveis comandos return_fun END_FUNCTION {$$ = novaFunction($4, $5, $9, $6, $7, $8, $1);}
 ;
 
 return_fun: RETURN L_PARENTESE expressao R_PARENTESE {$$ = novaExpressao(RETURN,0,NULL,0,$3,NULL,0);};
@@ -126,16 +126,14 @@ funcao_parametros: { $$ = NULL;}
     | funcao_parametros PARAMETER COLON expressao_primaria TYPE COLON tipos {$$ = novoParametro($4, $7, $1);}
 ;
 
-lista_comandos: {$$ = NULL; }
-    | lista_comandos comandos {$$ = setProxGenerico($2,$1);}
+
+comandos: {$$ = NULL;}
+    |if ponto_virgula comandos {$$ = setProxGenerico($1,$3 );}
+    | printf ponto_virgula comandos {$$ = setProxGenerico($1,$3 );}
+    | scanf ponto_virgula comandos {$$ = setProxGenerico($1,$3 );}
 ;
 
-comandos: if ponto_virgula lista_comandos {$$ = setProxGenerico($1,$3 );}
-    | printf ponto_virgula lista_comandos {$$ = setProxGenerico($1,$3 );}
-    | scanf ponto_virgula lista_comandos {$$ = setProxGenerico($1,$3 );}
-;
-
-scanf: SCANF L_PARENTESE expressao_primaria COMMA BITWISE_AND L_PARENTESE expressao_primaria R_PARENTESE R_PARENTESE ponto_virgula {$$ = cmd_generico(PRINTF, $3,NULL, NULL,$7);}
+scanf: SCANF L_PARENTESE expressao_primaria COMMA BITWISE_AND L_PARENTESE expressao_primaria R_PARENTESE R_PARENTESE ponto_virgula {$$ = cmd_generico(SCANF, $3,NULL, NULL,$7);}
 ;
 
 printf: PRINTF L_PARENTESE expressao_primaria COMMA expressao R_PARENTESE {$$ = cmd_generico(PRINTF, $3,NULL, NULL,$5);}
