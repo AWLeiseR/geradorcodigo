@@ -17,7 +17,7 @@
     Cmd_expressao *expressao;
     Comandos *comandos;
     Expressao *expr;
-    Function_struct *funcao;
+    Function_struct *lista_funcoes;
 }
 
 %token FUNCTION
@@ -90,16 +90,15 @@
 %token VALUE
 %token CONSTANT
 
-%type <funcao> inicio
-%type <funcao> funcoes
+%type <lista_funcoes> inicio
+%type <lista_funcoes> funcao
 %type <num> tipos funcao_tipo_retorno
-%type <expr> expressao_primaria expressao_aditiva expressao_comparativa expressao_logica
-%type <expr> expressao_multiplicativa
 %type <parametros> funcao_parametros
 %type <variaveis> funcao_variaveis
-%type <expr> expressao 
+%type <expr> expressao return_fun
+%type <expr> expressao_primaria
 %type <comandos> comandos
-%type <expr> lista_comandos
+%type <comandos> lista_comandos
 %type <comandos> if
 %type <comandos> printf
 %type <comandos> scanf
@@ -108,15 +107,15 @@
 
 %%
 
-inicio: funcoes {AST = $1;};
+inicio: funcao {AST = $1;};
 
-funcoes: 
-    | funcoes FUNCTION COLON expressao_primaria funcao_tipo_retorno funcao_parametros funcao_variaveis lista_comandos return_fun END_FUNCTION {}
+funcao: {$$ = NULL;}
+    | funcao FUNCTION COLON expressao_primaria funcao_tipo_retorno funcao_parametros funcao_variaveis lista_comandos return_fun END_FUNCTION {$$ = novaFunction($4, $5, $9, $6, $7, $8, $1); }
 ;
 
-return_fun:RETURN L_PARENTESE NUM_INTEGER R_PARENTESE {};
+return_fun: RETURN L_PARENTESE expressao R_PARENTESE {$$ = novaExpressao(RETURN,0,NULL,0,$3,NULL);};
 
-funcao_tipo_retorno: RETURN_TYPE COLON tipos{};
+funcao_tipo_retorno: RETURN_TYPE COLON tipos{$$ = $3;};
 
 funcao_variaveis: {$$ = NULL ;}
     | funcao_variaveis VARIABLE COLON expressao_primaria TYPE COLON tipos {$$ = novaVariavel($4, $7, $1);}
@@ -127,23 +126,23 @@ funcao_parametros: { $$ = NULL;}
 ;
 
 lista_comandos: {$$ = NULL; }
-    | lista_comandos comandos {  }
+    | lista_comandos comandos {$$ = setProxGenerico($2,$1);}
 ;
 
-comandos: if ponto_virgula lista_comandos {  }
-    | printf ponto_virgula lista_comandos {  }
-    | scanf ponto_virgula lista_comandos {  }
+comandos: if ponto_virgula lista_comandos {$$ = setProxGenerico($1,$3 );}
+    | printf ponto_virgula lista_comandos {$$ = setProxGenerico($1,$3 );}
+    | scanf ponto_virgula lista_comandos {$$ = setProxGenerico($1,$3 );}
 ;
 
-scanf: SCANF L_PARENTESE expressao_primaria COMMA BITWISE_AND L_PARENTESE expressao_primaria R_PARENTESE R_PARENTESE ponto_virgula {}
+scanf: SCANF L_PARENTESE expressao_primaria COMMA BITWISE_AND L_PARENTESE expressao_primaria R_PARENTESE R_PARENTESE ponto_virgula {$$ = cmd_generico(PRINTF, $3,NULL, NULL,$7);}
 ;
 
-printf: PRINTF L_PARENTESE expressao_primaria COMMA expressao R_PARENTESE { }
-    | PRINTF L_PARENTESE expressao_primaria R_PARENTESE {}
+printf: PRINTF L_PARENTESE expressao_primaria COMMA expressao R_PARENTESE {$$ = cmd_generico(PRINTF, $3,NULL, NULL,$5);}
+    | PRINTF L_PARENTESE expressao_primaria R_PARENTESE {$$ = cmd_generico(PRINTF, $3, NULL, NULL,NULL);}
 ;
 
-if: IF L_PARENTESE expressao COMMA comandos COMMA comandos R_PARENTESE {}
-    | IF L_PARENTESE expressao COMMA comandos R_PARENTESE {  }
+if: IF L_PARENTESE expressao COMMA comandos COMMA comandos R_PARENTESE {$$ = cmd_generico(IF, $3, $5, $7,NULL);}
+    | IF L_PARENTESE expressao COMMA comandos R_PARENTESE {$$ = cmd_generico(IF, $3, $5, NULL, NULL);}
 ;
 
 ponto_virgula: { }
@@ -152,30 +151,18 @@ ponto_virgula: { }
 ;
 
 expressao: {$$ = NULL; }
-    | expressao expressao_aditiva {}
-    | expressao expressao_comparativa {}
-    | expressao expressao_logica {}
-    | expressao expressao_multiplicativa {};
-;
-
-expressao_aditiva: expressao_primaria {$$ = $1;}
-    | PLUS L_PARENTESE expressao_aditiva COMMA expressao_aditiva R_PARENTESE {$$ = novaExpressao(PLUS,0,NULL,0,$3,$5);}
-    | MINUS L_PARENTESE expressao_aditiva COMMA expressao_aditiva R_PARENTESE {$$ = novaExpressao(MINUS,0,NULL,0,$3,$5);}
-;
-
-expressao_comparativa: GREATER_THAN L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(GREATER_THAN,0,NULL,0,$3,$5);}
+    | expressao_primaria {$$ = $1;}
+    | PLUS L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(PLUS,0,NULL,0,$3,$5);}
+    | MINUS L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(MINUS,0,NULL,0,$3,$5);}
+    | GREATER_THAN L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(GREATER_THAN,0,NULL,0,$3,$5);}
     | GREATER_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(GREATER_EQUAL,0,NULL,0,$3,$5);}
     | LESS_THAN L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(LESS_THAN,0,NULL,0,$3,$5);}
     | LESS_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(LESS_EQUAL,0,NULL,0,$3,$5);}
     | EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(EQUAL,0,NULL,0,$3,$5);}
     | NOT_EQUAL L_PARENTESE expressao COMMA  expressao R_PARENTESE {$$ = novaExpressao(NOT_EQUAL,0,NULL,0,$3,$5);}
-;
-
-expressao_logica: LOGICAL_AND L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(LOGICAL_AND,0,NULL,0,$3,$5);}
+    | LOGICAL_AND L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(LOGICAL_AND,0,NULL,0,$3,$5);}
     | LOGICAL_OR L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(LOGICAL_OR,0,NULL,0,$3,$5);}
-;
-
-expressao_multiplicativa: MULTIPLY L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(MULTIPLY,0,NULL,0,$3,$5);}
+    | MULTIPLY L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(MULTIPLY,0,NULL,0,$3,$5);}
     | DIV L_PARENTESE expressao COMMA expressao R_PARENTESE {$$ = novaExpressao(DIV,0,NULL,0,$3,$5);}
 ;
 

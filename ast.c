@@ -34,18 +34,19 @@ struct cmd_expressao{
 struct comandos{
     int tipo; // expr ou tipo comando (if, while, for...)
     //if, while,
-    Cmd_expressao *expr_comandos;
+    Expressao *expr_comandos;
     Comandos *cmd_if;
     Comandos *cmd_else;
-    Comandos *cmd_printf;
-    Comandos *cmd_scanf;
+    Expressao *cmd_printf;
+    Expressao *cmd_scanf;
     Comandos *cmd_return;
     Comandos *prox;
 };
 
 struct function_struct{
     Expressao nome;
-    Expressao tipo_retorno;
+    int tipo_retorno;
+    Expressao *exp_retorno;
     Parametros *parametros;
     Variaveis *variaveis;
     Comandos *function_comandos;
@@ -65,7 +66,6 @@ Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expr
     Expressao *novo;
     novo = (Expressao *) malloc(sizeof(Expressao));
     novo->tipo = tipo;
-    printf("%d\n",novo->tipo);
     if(tipo == IDENTIFIER || tipo == STRING){
         char *aux = (char*) malloc(sizeof(strlen(str))+4);
         strcpy(aux,str);
@@ -79,7 +79,7 @@ Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expr
     return novo;
 }
 
-Comandos *cmd_generico(int tipo, Cmd_expressao *exp, Comandos *cmd1, Comandos *cmd2){
+Comandos *cmd_generico(int tipo, Expressao *exp, Comandos *cmd1, Comandos *cmd2, Expressao *exp2){
     Comandos *novo = (Comandos *)malloc(sizeof(Comandos));
     novo->tipo = tipo;
     switch(tipo){
@@ -90,23 +90,24 @@ Comandos *cmd_generico(int tipo, Cmd_expressao *exp, Comandos *cmd1, Comandos *c
             break;
         case PRINTF:
             novo->expr_comandos = exp;
-            novo->cmd_printf = cmd1;
+            novo->cmd_printf = exp2;
             break;
         case SCANF:
             novo->expr_comandos = exp;
-            novo->cmd_scanf= cmd1;
+            novo->cmd_scanf= exp2;
             break;
     }
     return novo;
 }
 
-void setProxGenerico(Comandos *atual, Comandos *prox) {
+Comandos* setProxGenerico(Comandos *atual, Comandos *prox) {
     atual->prox = prox;
+    return atual;
 }
 
-Function_struct *novaFunction(Function_struct *proximo, Expressao *nome, Expressao tipo_retorno, Parametros *parametros, Variaveis *variaveis, Cmd_expressao *function_comandos) {
+Function_struct *novaFunction(Expressao *nome, int tipo_retorno, Expressao *exp_retorno, Parametros *parametros, Variaveis *variaveis, Comandos *function_comandos, Function_struct *proximo) {
     Function_struct *novo = (Function_struct *) malloc(sizeof(Function_struct));
-    // strcpy(novo->nome, nome);
+    printf("%s\n",nome->str);
     // novo->tipo_retorno = tipo_retorno;
     // novo->parametros = parametros;
     // novo->variaveis = variaveis;

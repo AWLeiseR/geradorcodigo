@@ -131,7 +131,7 @@ union YYSTYPE
     Cmd_expressao *expressao;
     Comandos *comandos;
     Expressao *expr;
-    Function_struct *funcao;
+    Function_struct *lista_funcoes;
 
 #line 137 "sintatico.tab.h" /* yacc.c:1909  */
 };
