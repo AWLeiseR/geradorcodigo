@@ -55,11 +55,12 @@ struct function_struct{
     Function_struct * prox;
 };
 //colocar variavel para saber de qual lado esta vindo 0 direita, 1 esquerda
-void imprimeExpressao(Expressao *exp){
+int imprimeExpressao(Expressao *exp, int reg){
     Expressao *aux = exp;
+    int auxReg;
+    int auxReg2;
     if(aux){
-        imprimeExpressao(aux->filho_direito);
-        imprimeExpressao(aux->filho_esquerdo);
+
         switch (aux->tipo){
             case NUM_INTEGER:
                 //printf("--aux %f\n",aux->valueFloat);
@@ -67,15 +68,68 @@ void imprimeExpressao(Expressao *exp){
             case STRING:
                 printf("%s\n",aux->str);
                 break;
+            case EQUAL:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                //chamar funcao equal
+                break;
+            case NOT_EQUAL:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case GREATER_EQUAL:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case GREATER_THAN:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case LESS_EQUAL:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case LESS_THAN:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case MULTIPLY:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case DIV:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case PLUS:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case MINUS:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                break;
+            case LOGICAL_AND:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                    //chamar inserir and ->reg resultado total
+                break;
+            case LOGICAL_OR:
+                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                    //chamar funcao de inserir or -> reg resultado total
+                break;
             default:
                 //printf("--aux %d\n",aux->tipo);
                 break;
         }
     }
+    return reg;
     
 }
 
 void imprimiAST(Function_struct *f){
+    int reg;
     Expressao *n =(Expressao*) f->nome;
     Expressao *r = f->exp_retorno;
     Variaveis *aux = f->variaveis;
@@ -97,12 +151,15 @@ void imprimiAST(Function_struct *f){
             //inserir .text
             break;
         case IF:
-            //label para a comparacao
-            //comparacao
-            //label para os comandos
-            //comandos
-            //label para o else
-            //comandos
+            //imprimir comparacoes
+            reg = imprimeExpressao(auxC->cmd_if,0);
+            imprimiIF(reg);
+            //label
+            //comandos if
+            //label j pra sair do if
+            //label if_else
+            //comandos else
+            //label sair if
             break;
         default:
             break;

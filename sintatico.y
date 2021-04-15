@@ -128,7 +128,7 @@ funcao_parametros: { $$ = NULL;}
 
 
 comandos: {$$ = NULL;}
-    |if ponto_virgula comandos {$$ = setProxGenerico($1,$3 );}
+    | if ponto_virgula comandos {$$ = setProxGenerico($1,$3 );}
     | printf ponto_virgula comandos {$$ = setProxGenerico($1,$3 );}
     | scanf ponto_virgula comandos {$$ = setProxGenerico($1,$3 );}
 ;

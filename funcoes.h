@@ -5,4 +5,5 @@
     void imprimiprintf();
     ProgramaMips *iniciaProgramaStruct();
     void imprimirPrograma(ProgramaMips *p);
+    void imprimiAND(int reg1, int reg2, int reg3);
 #endif

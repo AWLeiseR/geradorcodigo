@@ -4,6 +4,7 @@
 #include "funcoes.h"
 
 int contadorRotulos = 0;
+int contadorLabelIf = 0;
 
 typedef struct item{
   char * comandoImpressao;
@@ -84,9 +85,9 @@ void imprimirPrograma(ProgramaMips *p){
   }
 }
 
-char* inseriAd(char *destino, char *registrador2, char *registrador3){
-  char *c = malloc(sizeof(char)+(strlen(destino)+strlen(registrador2)+strlen(registrador3)+10));
-  sprintf(c,"add %s, %s, %s\n", destino, registrador2, registrador3);
+char* inseriAd(int destino,int registrador2,int registrador3){
+  char *c = malloc(sizeof(char)+(strlen(destino)+18));
+  sprintf(c,"add %d, %d, %d\n", destino, registrador2, registrador3);
   return c;
 }
 
@@ -122,3 +123,100 @@ void imprimeExit(){
   printf("addi $v0, $zero, 10\n");
   printf("syscall\n");
 }
+
+Item_struct imprimiIF(int reg1){
+  Item_struct *i= malloc(sizeof(Item_struct));
+  char *linha1, *linha2, *linha3;
+  linha1 = malloc(sizeof(char)*22);
+  //inserir label aqui
+  sprintf(linha1,"beqz $t%d, label\n",reg1);
+  //sgt maior q
+
+}
+
+void imprimiAND(int reg1, int reg2, int reg3){
+
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  Item_struct *i2= malloc(sizeof(Item_struct));
+  Item_struct *i3= malloc(sizeof(Item_struct));
+  char *linha1, *linha2, *linha3;
+  linha1 = malloc(sizeof(char)*22);
+  sprintf(linha1,"sne $t%d, $zero, $t%d\n",reg1,reg1);
+  linha2 = malloc(sizeof(char)*22);
+  sprintf(linha2,"sne $t%d, $zero, $t%d\n",reg2,reg2);
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"and $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
+void imprimiAND(int reg1, int reg2, int reg3){
+  
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  Item_struct *i2= malloc(sizeof(Item_struct));
+  Item_struct *i3= malloc(sizeof(Item_struct));
+  char *linha1, *linha2, *linha3;
+  linha1 = malloc(sizeof(char)*22);
+  sprintf(linha1,"sne $t%d, $zero, $t%d\n",reg1,reg1);
+  linha2 = malloc(sizeof(char)*22);
+  sprintf(linha2,"sne $t%d, $zero, $t%d\n",reg2,reg2);
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"or $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
+void imprimirEqual(int reg1, int reg2, int reg3){
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  char *linha3;
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"seq $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
+void imprimirNotEqual(int reg1, int reg2, int reg3){
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  char *linha3;
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"sne $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
+void imprimirGreaterEqual(int reg1, int reg2, int reg3){
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  char *linha3;
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"sge $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
+void imprimirGreaterEqual(int reg1, int reg2, int reg3){
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  char *linha3;
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"sgt $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
+void imprimirLessEqual(int reg1, int reg2, int reg3){
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  char *linha3;
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"sle $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
+void imprimirLess(int reg1, int reg2, int reg3){
+  Item_struct *i1= malloc(sizeof(Item_struct));
+  char *linha3;
+  linha3 = malloc(sizeof(char)*22);
+  sprintf(linha3,"slt $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+
+  //retornar o comeco da lista
+}
+
