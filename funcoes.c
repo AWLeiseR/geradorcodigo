@@ -4,38 +4,16 @@
 #include "funcoes.h"
 
 int contadorRotulos = 0;
+
 typedef struct item{
   char * comandoImpressao;
   Item_struct *prox;
 };
 
-typedef struct{
+typedef struct programaMips{
   Item_struct *data;
   Item_struct *text;
-}ProgramaMips;
-
-//> 0, >= 1,< 2, <= 3, == 4, 0== 5
-void imprimeIf(int tipo){
-  switch(tipo){
-    case 1:
-      break;
-    case 2:
-      break;
-    case 3:
-      break;
-    case 4:
-      break;
-    case 5:
-      break;
-    default:
-      break;
-  }
-}
-
-ProgramaMips *iniciaProgramaStruct(){
-  ProgramaMips *i = malloc(sizeof(ProgramaMips));
-  return i;
-}
+};
 
 Item_struct* iniciaData(){
   char *inicio = malloc(sizeof(char)*7);
@@ -55,13 +33,12 @@ Item_struct *iniciaText(){
   return item;
 }
 
-// void imprimiprintf(){
-//   char strAux[]="\t printf";
-//   char strAux2[]=":\t .asciiz ";
-//   char* strConcatenada = malloc(sizeof(char)*(strlen(strAux)+strlen(strAux2)+2));
-//   sprintf(strConcatenada,"%s%d%s",strAux,contadorRotulos,strAux2);
-//   printf("--%s\n",strConcatenada);
-// }
+ProgramaMips *iniciaProgramaStruct(){
+  ProgramaMips *i = malloc(sizeof(ProgramaMips));
+  i->data = iniciaData();
+  i->text = iniciaText();
+  return i;
+}
 
 Item_struct *inseriRotulo(Item_struct *lista,char* str){
   Item_struct *aux = lista;
@@ -81,13 +58,49 @@ Item_struct *inseriRotulo(Item_struct *lista,char* str){
   return lista;
 }
 
-void imprimeAd(char *registrador1, char *registrador2, char *registrador3){
-  printf("add %s, %s, %s\n", registrador1, registrador2, registrador3);
+Item_struct* inseriLista(Item_struct *lista, char *c){
+  Item_struct *item = malloc(sizeof(Item_struct));
+  Item_struct *aux = lista;
+  item->comandoImpressao;
+  while (aux->prox != NULL){
+    aux = aux->prox; 
+  }
+  aux->prox = item;
+  return lista;
 }
 
-void imprimeSub(char *registrador1, char *registrador2, char *registrador3){
-  printf("sub %s, %s,%s\n", registrador1, registrador2, registrador3);
+void imprimirPrograma(ProgramaMips *p){
+  Item_struct *data = p->data;
+  Item_struct *text = p->text;
+  Item_struct *aux = data;
+  while(aux!=NULL){
+    printf("%s",aux->comandoImpressao);
+    aux =aux->prox;
+  }
+  aux = text;
+  while(aux!=NULL){
+    printf("%s",aux->comandoImpressao);
+    aux =aux->prox;
+  }
 }
+
+char* inseriAd(char *destino, char *registrador2, char *registrador3){
+  char *c = malloc(sizeof(char)+(strlen(destino)+strlen(registrador2)+strlen(registrador3)+10));
+  sprintf(c,"add %s, %s, %s\n", destino, registrador2, registrador3);
+  return c;
+}
+
+char* inseriSub(char *destino, char *registrador2, char *registrador3){
+  char *c = malloc(sizeof(char)+(strlen(destino)+strlen(registrador2)+strlen(registrador3)+10));
+  sprintf(c,"sub %s, %s,%s\n", destino, registrador2, registrador3);
+  return c;
+}
+
+char* inseriLabel(char *str){
+  char *c = malloc(sizeof(char)*(strlen(str)));
+  sprintf(c,"%s",str);
+}
+
 //0 para int e 1 para string
 void imprimePrintf(int tipo, char *registrador){
   if(!tipo){
@@ -101,7 +114,8 @@ void imprimePrintf(int tipo, char *registrador){
 }
 
 void imprimeScanf(){
-
+  printf("li $v0, 5\n");
+  printf("syscall\n");
 }
 
 void imprimeExit(){

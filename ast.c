@@ -54,19 +54,22 @@ struct function_struct{
     Comandos *function_comandos;
     Function_struct * prox;
 };
-
+//colocar variavel para saber de qual lado esta vindo 0 direita, 1 esquerda
 void imprimeExpressao(Expressao *exp){
     Expressao *aux = exp;
     if(aux){
         imprimeExpressao(aux->filho_direito);
         imprimeExpressao(aux->filho_esquerdo);
-        if(aux->tipo == NUM_INTEGER){
-            printf("--aux %f\n",aux->valueFloat);
-        }else if(aux->tipo == STRING){
-            printf("--aux %s\n",aux->str);
-
-        }else{
-            printf("--aux %d\n",aux->tipo);
+        switch (aux->tipo){
+            case NUM_INTEGER:
+                //printf("--aux %f\n",aux->valueFloat);
+                break;
+            case STRING:
+                printf("%s\n",aux->str);
+                break;
+            default:
+                //printf("--aux %d\n",aux->tipo);
+                break;
         }
     }
     
@@ -75,25 +78,39 @@ void imprimeExpressao(Expressao *exp){
 void imprimiAST(Function_struct *f){
     Expressao *n =(Expressao*) f->nome;
     Expressao *r = f->exp_retorno;
-    Variaveis *p = f->variaveis;
-    Variaveis *aux = p;
-    Comandos *c = f->function_comandos;
-    Comandos *auxC = c;
-    //imprimiprintf();
-    printf("function: %s return: %d\n",n->str,f->tipo_retorno);
-    printf("expressão retorno - %f\n",r->filho_esquerdo->valueFloat);
+    Variaveis *aux = f->variaveis;
+    Comandos *auxC = f->function_comandos;
+    ProgramaMips *program = iniciaProgramaStruct();
+    //inserir nome da funcao no .text NOME_FUNC:
     while (aux !=NULL){
         Expressao *nomeVar= aux->id;
         printf("variveis = %s tipo=%d\n",nomeVar->str,aux->tipo);
         aux = aux->prox;
     }
     while (auxC != NULL){
-        printf("%d\n",auxC->tipo);
+        switch (auxC->tipo){
+        case PRINTF:
+            //inserir rotulos no .data
+            //inserir comando de impressao no .text
+            break;
+        case SCANF:
+            //inserir .text
+            break;
+        case IF:
+            //label para a comparacao
+            //comparacao
+            //label para os comandos
+            //comandos
+            //label para o else
+            //comandos
+            break;
+        default:
+            break;
+        }
+        
         imprimeExpressao(auxC->expr_comandos);
         auxC = auxC->prox;
-    }
-    
-    
+    } 
 }
 
 Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {
@@ -111,8 +128,9 @@ Expressao *novaExpressao(int tipo, int value, char *str, int dimensaoArray, Expr
     novo->filho_direito = filho_direito;
     novo->filho_esquerdo = filho_esquerdo;
     if(tipo == IDENTIFIER || tipo == STRING){
-        char *aux = (char*) malloc(sizeof(strlen(str))+4);
+        char *aux = (char*) malloc(sizeof(char)*(strlen(str)+4));
         strcpy(aux,str);
+        aux[strlen(aux)] ='\0'; 
         novo->str = aux;
     }else if(tipo == NUM_INTEGER){
         novo->valueFloat = valueFloat;
@@ -156,7 +174,6 @@ Function_struct *novaFunction(Expressao *nome, int tipo_retorno, Expressao *exp_
     novo->parametros = parametros;
 
     novo->variaveis = variaveis;
-    printf("%d\n",novo->variaveis->tipo);
     novo->exp_retorno = exp_retorno;
     novo->function_comandos = function_comandos;
     novo->prox = proximo;

@@ -1886,10 +1886,6 @@ void yyerror(char *s) {
 }
 
 int main(int argc, char **argv) {
-    printf(".data\n");
-    // tratar prints
-    printf(".text\n");
-    // tratar comandos
     yyparse();
     return 0;
 }
