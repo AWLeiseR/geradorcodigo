@@ -54,13 +54,14 @@ struct function_struct{
     Comandos *function_comandos;
     Function_struct * prox;
 };
-//colocar variavel para saber de qual lado esta vindo 0 direita, 1 esquerda
-int imprimeExpressao(Expressao *exp, int reg){
+
+int imprimeExpressao(ProgramaMips *p,Expressao *exp, int reg){
     Expressao *aux = exp;
+    
     int auxReg;
     int auxReg2;
     if(aux){
-
+        //ver o q fazer com as strings e os interios
         switch (aux->tipo){
             case NUM_INTEGER:
                 //printf("--aux %f\n",aux->valueFloat);
@@ -69,55 +70,64 @@ int imprimeExpressao(Expressao *exp, int reg){
                 printf("%s\n",aux->str);
                 break;
             case EQUAL:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
-                //chamar funcao equal
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimirEqual(p->text,auxReg,auxReg2,reg);
                 break;
             case NOT_EQUAL:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimirNotEqual(p->text,auxReg, auxReg2, reg);
                 break;
             case GREATER_EQUAL:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimirGreater(p->text,auxReg,auxReg2,reg);
                 break;
             case GREATER_THAN:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimirGreater(p->text,auxReg,auxReg2,reg);
                 break;
             case LESS_EQUAL:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimirLessEqual(p->text,auxReg,auxReg2,reg);
                 break;
             case LESS_THAN:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimirLess(p->text,auxReg,auxReg2,reg);
                 break;
             case MULTIPLY:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                inseriMul(reg,auxReg,auxReg2);
                 break;
             case DIV:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                inseriDiv(reg,auxReg,auxReg2);
                 break;
             case PLUS:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                inseriAd(reg,auxReg,auxReg2);
                 break;
             case MINUS:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                inseriSub(reg, auxReg, auxReg2);
                 break;
             case LOGICAL_AND:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
-                    //chamar inserir and ->reg resultado total
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimiAND(p->text,auxReg,auxReg2,reg);
                 break;
             case LOGICAL_OR:
-                auxReg = imprimeExpressao(aux->filho_direito,reg+1);
-                auxReg2 = imprimeExpressao(aux->filho_esquerdo,auxReg);
-                    //chamar funcao de inserir or -> reg resultado total
+                auxReg = imprimeExpressao(p,aux->filho_direito,reg+1);
+                auxReg2 = imprimeExpressao(p,aux->filho_esquerdo,auxReg+1);
+                imprimiOR(p->text, auxReg, auxReg2,reg);
                 break;
             default:
                 //printf("--aux %d\n",aux->tipo);
@@ -127,47 +137,69 @@ int imprimeExpressao(Expressao *exp, int reg){
     return reg;
     
 }
-
+void imprimiComandos(ProgramaMips *program,Comandos *auxC,int labelNum){
+    int reg=0;
+    while (auxC != NULL){
+        switch (auxC->tipo){
+            case PRINTF:
+                //inserir os prints no .text só inserir la na funcao
+                if(auxC->cmd_printf){
+                    
+                    imprimePrintf(program,"PRINTF", auxC->expr_comandos->str,auxC->cmd_printf->str, labelNum);
+                }
+               imprimePrintf(program,"PRINTF", auxC->expr_comandos->str,"",labelNum);
+                //
+                break;
+            case SCANF:
+                imprimeScanf(program->text,reg);
+                printf("%s\n",auxC->cmd_scanf->str);
+                break;
+            case IF:
+            //verificar se os if estao indo certinho
+                //imprimir comparacoes
+                reg = imprimeExpressao(program,auxC->expr_comandos,reg);
+                imprimiIF(program->text,reg,labelNum);
+                //label
+                inseriLabel(program->text,"IF",labelNum);
+                //comandos if
+                imprimiComandos(program,auxC->cmd_if,labelNum+1);
+                //label j pra sair do if
+                inseriLabel(program->text,"j EXIT_IF",labelNum);
+                //label if_else
+                if(auxC->cmd_else){
+                    inseriLabel(program->text,"ELSE",labelNum);
+                    //comandos else
+                    imprimiComandos(program,auxC->cmd_else,labelNum+1);
+                }
+                //label sair if
+                inseriLabel(program->text,"EXIT_IF",labelNum);
+                break;
+            default:
+                break;
+        }
+       //imprimeExpressao(program,auxC->expr_comandos,reg++);
+        auxC = auxC->prox;
+    }
+}
 void imprimiAST(Function_struct *f){
-    int reg;
+    int reg = 0;
     Expressao *n =(Expressao*) f->nome;
     Expressao *r = f->exp_retorno;
     Variaveis *aux = f->variaveis;
     Comandos *auxC = f->function_comandos;
     ProgramaMips *program = iniciaProgramaStruct();
+    
     //inserir nome da funcao no .text NOME_FUNC:
+    //reservar variaveis e trocar os registradores temporarios por elas no codigo
     while (aux !=NULL){
         Expressao *nomeVar= aux->id;
         printf("variveis = %s tipo=%d\n",nomeVar->str,aux->tipo);
         aux = aux->prox;
     }
-    while (auxC != NULL){
-        switch (auxC->tipo){
-        case PRINTF:
-            //inserir rotulos no .data
-            //inserir comando de impressao no .text
-            break;
-        case SCANF:
-            //inserir .text
-            break;
-        case IF:
-            //imprimir comparacoes
-            reg = imprimeExpressao(auxC->cmd_if,0);
-            imprimiIF(reg);
-            //label
-            //comandos if
-            //label j pra sair do if
-            //label if_else
-            //comandos else
-            //label sair if
-            break;
-        default:
-            break;
-        }
-        
-        imprimeExpressao(auxC->expr_comandos);
-        auxC = auxC->prox;
-    } 
+    imprimiComandos(program,auxC,0);
+    imprimeExit(program->text);
+    imprimirPrograma(program);
+     
 }
 
 Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {
