@@ -145,6 +145,7 @@ void imprimePrintf(ProgramaMips *p,char *label, char* formatPrint,char *variavel
     inseriLista(p->text,i2);
     inseriLista(p->text,i3);
   }else{
+    // precisa checar os comandos mips
     Item_struct *i4 = malloc(sizeof(Item_struct));
     Item_struct *i5 = malloc(sizeof(Item_struct));
     char *linha4, *linha5;
@@ -183,6 +184,15 @@ void imprimeScanf(Item_struct *lista,int reg){
   inseriLista(lista,i1);
   inseriLista(lista,i2);
   inseriLista(lista,i3);
+}
+
+void imprimeFunction(Item_struct *lista, char *nome) {
+  Item_struct *i1 = malloc(sizeof(Item_struct));
+  char *linha1;
+  linha1 = malloc(sizeof(char)*strlen(nome)+10);
+  sprintf(linha1, "%s\n", nome);
+  i1->comandoImpressao = linha1;
+  inseriLista(lista,i1);
 }
 
 void imprimeExit(Item_struct *lista){

@@ -31,6 +31,7 @@
     void incrementaLabel();
     void imprimePrintf(ProgramaMips *p,char *label, char* formatPrint,char *variavel,int labelNum);
     void imprimeScanf(Item_struct *lista,int reg);
+    void imprimeFunction(Item_struct *lista, char *nome);
     void imprimeExit(Item_struct *lista);
     void imprimiIF(Item_struct *lista,int reg1,int labelnum);
     

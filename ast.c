@@ -137,14 +137,12 @@ int imprimeExpressao(ProgramaMips *p,Expressao *exp, int reg){
         }
     }
     return reg;
-    
 }
 void imprimiComandos(ProgramaMips *program,Comandos *auxC,int labelNum){
     int reg=0;
     while (auxC != NULL){
         switch (auxC->tipo){
             case PRINTF:
-                //inserir os prints no .text só inserir la na funcao
                 if(auxC->cmd_printf){
                     // quando entra?
                     imprimePrintf(program,"PRINTF", auxC->expr_comandos->str,auxC->cmd_printf->str, labelComandos);
@@ -184,6 +182,7 @@ void imprimiComandos(ProgramaMips *program,Comandos *auxC,int labelNum){
         auxC = auxC->prox;
     }
 }
+
 void imprimiAST(Function_struct *f){
     int reg = 0;
     Expressao *n =(Expressao*) f->nome;
@@ -192,17 +191,19 @@ void imprimiAST(Function_struct *f){
     Comandos *auxC = f->function_comandos;
     ProgramaMips *program = iniciaProgramaStruct();
     
-    //inserir nome da funcao no .text NOME_FUNC:
-    //reservar variaveis e trocar os registradores temporarios por elas no codigo
-    while (aux !=NULL){
-        Expressao *nomeVar= aux->id;
-        //printf("variveis = %s tipo=%d\n",nomeVar->str,aux->tipo);
-        aux = aux->prox;
-    }
-    imprimiComandos(program,auxC,0);
+    do {
+        imprimeFunction(program->text, n->str);
+        //reservar variaveis e trocar os registradores temporarios por elas no codigo
+        while (aux !=NULL){
+            Expressao *nomeVar= aux->id;
+            //printf("variveis = %s tipo=%d\n contador=%d\n",nomeVar->str,aux->tipo, aux->contador);
+            aux = aux->prox;
+        }
+        imprimiComandos(program,auxC,0);
+        
+    } while(f->prox != NULL);     
     imprimeExit(program->text);
     imprimirPrograma(program);
-     
 }
 
 Cmd_expressao *novoCmdExpressao(Expressao *exp, Cmd_expressao *prox) {

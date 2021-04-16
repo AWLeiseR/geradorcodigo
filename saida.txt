@@ -9,6 +9,7 @@
 	 printf7:	 .asciiz "Triangulo Escaleno."
 	 printf8:	 .asciiz "Nao eh Triangulo!!!\n"
 .text
+main
 addi $v0, $zero, 4
 la $a0, printf0
 syscall
