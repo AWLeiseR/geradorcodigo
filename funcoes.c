@@ -127,7 +127,7 @@ void imprimePrintf(ProgramaMips *p,char *label, char* formatPrint,char *variavel
     Item_struct *i1 = malloc(sizeof(Item_struct));
     char * linha1;
     linha1 = malloc(sizeof(char)*(strlen(formatPrint)+30));
-    sprintf(linha1,"\t printf%d:\t .asciiz %s\n",labelNum,formatPrint);
+    sprintf(linha1,"\tprintf%d:\t .asciiz %s\n",labelNum,formatPrint);
     i1->comandoImpressao = linha1;
     inseriLista(p->data,i1);
   }
@@ -137,10 +137,10 @@ void imprimePrintf(ProgramaMips *p,char *label, char* formatPrint,char *variavel
     Item_struct *i3 = malloc(sizeof(Item_struct));
     char *linha2, *linha3;
     linha2 = malloc(sizeof(char)*30);
-    sprintf(linha2, "addi $v0, $zero, 4\n");
+    sprintf(linha2, "\taddi $v0, $zero, 4\n");
     i2->comandoImpressao = linha2;
     linha3 = malloc(sizeof(char)*(strlen(label)+30));
-    sprintf(linha3, "la $a0, %s%d\n",label,contadorRotulos);
+    sprintf(linha3, "\tla $a0, %s%d\n",label,contadorRotulos);
     i3->comandoImpressao = linha3;
     inseriLista(p->text,i2);
     inseriLista(p->text,i3);
@@ -150,10 +150,10 @@ void imprimePrintf(ProgramaMips *p,char *label, char* formatPrint,char *variavel
     Item_struct *i5 = malloc(sizeof(Item_struct));
     char *linha4, *linha5;
     linha4 = malloc(sizeof(char)*(strlen(label)+30));
-    sprintf(linha4, "li $v0, %s%d\n",label,contadorRotulos);
+    sprintf(linha4, "\tli $v0, %s%d\n",label,contadorRotulos);
     i4->comandoImpressao = linha4;
     linha5 = malloc(sizeof(char)*30);
-    sprintf(linha5, "move $a0, 4, $zero\n");
+    sprintf(linha5, "\tmove $a0, 4, $zero\n");
     i5->comandoImpressao = linha5;
     inseriLista(p->text,i4);
     inseriLista(p->text,i5);
@@ -162,7 +162,7 @@ void imprimePrintf(ProgramaMips *p,char *label, char* formatPrint,char *variavel
   Item_struct *i6 = malloc(sizeof(Item_struct));
   char *linha6;
   linha6 = malloc(sizeof(char)*15);
-  sprintf(linha6, "syscall\n");
+  sprintf(linha6, "\tsyscall\n");
   i6->comandoImpressao = linha6;
   inseriLista(p->text,i6);
 }
@@ -173,13 +173,13 @@ void imprimeScanf(Item_struct *lista,int reg){
   Item_struct *i3 = malloc(sizeof(Item_struct));
   char *linha1, *linha2, *linha3;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"li $v0, 5\n");
+  sprintf(linha1,"\tli $v0, 5\n");
   i1->comandoImpressao = linha1;
   linha2 = malloc(sizeof(char)*22);
-  sprintf(linha2,"syscall\n");
+  sprintf(linha2,"\tsyscall\n");
   i2->comandoImpressao = linha2;
   linha3 = malloc(sizeof(char)*23);
-  sprintf(linha3,"add $s%d, $zero, $v0\n",reg);
+  sprintf(linha3,"\tadd $s%d, $zero, $v0\n",reg);
   i3->comandoImpressao = linha3;
   inseriLista(lista,i1);
   inseriLista(lista,i2);
@@ -190,7 +190,7 @@ void imprimeFunction(Item_struct *lista, char *nome) {
   Item_struct *i1 = malloc(sizeof(Item_struct));
   char *linha1;
   linha1 = malloc(sizeof(char)*strlen(nome)+10);
-  sprintf(linha1, "%s\n", nome);
+  sprintf(linha1, "%s:\n", nome);
   i1->comandoImpressao = linha1;
   inseriLista(lista,i1);
 }
@@ -201,9 +201,9 @@ void imprimeExit(Item_struct *lista){
   char *linha1, *linha2;
   linha1 = malloc(sizeof(char)*25);
   linha2 = malloc(sizeof(char)*22);
-  sprintf(linha1,"addi $v0, $zero, 10\n");
+  sprintf(linha1,"\taddi $v0, $zero, 10\n");
   i1->comandoImpressao = linha1;
-  sprintf(linha2,"syscall\n");
+  sprintf(linha2,"\tsyscall\n");
   i2->comandoImpressao = linha2;
   inseriLista(lista,i1);
   inseriLista(lista,i2);
@@ -215,7 +215,7 @@ void imprimiIF(Item_struct *lista,int reg1,int labelnum){
   char *linha1, *linha2, *linha3;
   linha1 = malloc(sizeof(char)*30);
   // inserir label aqui
-  sprintf(linha1,"beqz $t%d, IF%d:\n",reg1,labelnum);
+  sprintf(linha1,"\tbeqz $t%d, IF%d:\n",reg1,labelnum);
   //sgt maior q
   i->comandoImpressao = linha1;
   inseriLista(lista,i);
@@ -231,13 +231,13 @@ void imprimiAND(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i3= malloc(sizeof(Item_struct));
   char *linha1, *linha2, *linha3;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"sne $t%d, $zero, $t%d\n",reg1,reg1);
+  sprintf(linha1,"\tsne $t%d, $zero, $t%d\n",reg1,reg1);
   i1->comandoImpressao = linha1;
   linha2 = malloc(sizeof(char)*22);
-  sprintf(linha2,"sne $t%d, $zero, $t%d\n",reg2,reg2);
+  sprintf(linha2,"\tsne $t%d, $zero, $t%d\n",reg2,reg2);
   i2->comandoImpressao = linha2;
   linha3 = malloc(sizeof(char)*22);
-  sprintf(linha3,"and $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha3,"\tand $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i3->comandoImpressao = linha3;
   inseriLista(lista,i1);
   inseriLista(lista,i2);
@@ -253,13 +253,13 @@ void imprimiOR(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i3= malloc(sizeof(Item_struct));
   char *linha1, *linha2, *linha3;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"sne $t%d, $zero, $t%d\n",reg1,reg1);
+  sprintf(linha1,"\tsne $t%d, $zero, $t%d\n",reg1,reg1);
   i1->comandoImpressao = linha1;
   linha2 = malloc(sizeof(char)*22);
-  sprintf(linha2,"sne $t%d, $zero, $t%d\n",reg2,reg2);
+  sprintf(linha2,"\tsne $t%d, $zero, $t%d\n",reg2,reg2);
   i2->comandoImpressao = linha2;
   linha3 = malloc(sizeof(char)*22);
-  sprintf(linha3,"or $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha3,"\tor $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i3->comandoImpressao = linha3;
   inseriLista(lista,i1);
   inseriLista(lista,i2);
@@ -271,7 +271,7 @@ void imprimirEqual(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i1= malloc(sizeof(Item_struct));
   char *linha1;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"seq $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha1,"\tseq $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i1->comandoImpressao = linha1;
   inseriLista(lista,i1);
 }
@@ -281,7 +281,7 @@ void imprimirNotEqual(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i1= malloc(sizeof(Item_struct));
   char *linha1;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"sne $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha1,"\tsne $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i1->comandoImpressao = linha1;
   inseriLista(lista,i1);
 }
@@ -291,7 +291,7 @@ void imprimirGreaterEqual(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i1= malloc(sizeof(Item_struct));
   char *linha1;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"sge $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha1,"\tsge $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i1->comandoImpressao = linha1;
   inseriLista(lista,i1);
 }
@@ -301,7 +301,7 @@ void imprimirGreater(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i1= malloc(sizeof(Item_struct));
   char *linha1;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"sgt $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha1,"\tsgt $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i1->comandoImpressao = linha1;
   inseriLista(lista,i1);
 }
@@ -311,7 +311,7 @@ void imprimirLessEqual(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i1= malloc(sizeof(Item_struct));
   char *linha1;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"sle $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha1,"\tsle $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i1->comandoImpressao = linha1;
   inseriLista(lista,i1);
 }
@@ -321,7 +321,7 @@ void imprimirLess(Item_struct *lista,int reg1, int reg2, int reg3){
   Item_struct *i1= malloc(sizeof(Item_struct));
   char *linha1;
   linha1 = malloc(sizeof(char)*22);
-  sprintf(linha1,"slt $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
+  sprintf(linha1,"\tslt $t%d, $t%d, $t%d\n",reg3,reg1,reg2);
   i1->comandoImpressao = linha1;
   inseriLista(lista,i1);
 }
