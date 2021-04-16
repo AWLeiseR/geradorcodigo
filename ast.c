@@ -6,6 +6,8 @@
 #include <string.h>
 #include "funcoes.h"
 
+int labelComandos = 0;
+
 struct parametros {
     int tipo;
     Expressao* id;
@@ -144,15 +146,16 @@ void imprimiComandos(ProgramaMips *program,Comandos *auxC,int labelNum){
             case PRINTF:
                 //inserir os prints no .text só inserir la na funcao
                 if(auxC->cmd_printf){
-                    
-                    imprimePrintf(program,"PRINTF", auxC->expr_comandos->str,auxC->cmd_printf->str, labelNum);
+                    // quando entra?
+                    imprimePrintf(program,"PRINTF", auxC->expr_comandos->str,auxC->cmd_printf->str, labelComandos);
                 }
-               imprimePrintf(program,"PRINTF", auxC->expr_comandos->str,"",labelNum);
+               imprimePrintf(program,"printf", auxC->expr_comandos->str,"",labelComandos);
+               labelComandos++;
                 //
                 break;
             case SCANF:
                 imprimeScanf(program->text,reg);
-                printf("%s\n",auxC->cmd_scanf->str);
+                //printf("%s\n",auxC->cmd_scanf->str);
                 break;
             case IF:
             //verificar se os if estao indo certinho
@@ -193,7 +196,7 @@ void imprimiAST(Function_struct *f){
     //reservar variaveis e trocar os registradores temporarios por elas no codigo
     while (aux !=NULL){
         Expressao *nomeVar= aux->id;
-        printf("variveis = %s tipo=%d\n",nomeVar->str,aux->tipo);
+        //printf("variveis = %s tipo=%d\n",nomeVar->str,aux->tipo);
         aux = aux->prox;
     }
     imprimiComandos(program,auxC,0);

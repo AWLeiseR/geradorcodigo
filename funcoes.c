@@ -76,7 +76,7 @@ void imprimirPrograma(ProgramaMips *p){
 }
 
 void inseriAd(int destino,int registrador2,int registrador3){
-  printf("add %d, %d, %d\n", destino, registrador2, registrador3);
+  // printf("add %d, %d, %d\n", destino, registrador2, registrador3);
   // char *c = malloc(sizeof(char)*18);
   // sprintf(c,"add %d, %d, %d\n", destino, registrador2, registrador3);
   // return c;
@@ -133,13 +133,37 @@ void imprimePrintf(ProgramaMips *p,char *label, char* formatPrint,char *variavel
   }
   
   if(!tipo){
-    printf("li $v0, %s%d\n",label,contadorRotulos);
-    printf("add $a0, 1, $zero\n");
+    Item_struct *i2 = malloc(sizeof(Item_struct));
+    Item_struct *i3 = malloc(sizeof(Item_struct));
+    char *linha2, *linha3;
+    linha2 = malloc(sizeof(char)*30);
+    sprintf(linha2, "addi $v0, $zero, 4\n");
+    i2->comandoImpressao = linha2;
+    linha3 = malloc(sizeof(char)*(strlen(label)+30));
+    sprintf(linha3, "la $a0, %s%d\n",label,contadorRotulos);
+    i3->comandoImpressao = linha3;
+    inseriLista(p->text,i2);
+    inseriLista(p->text,i3);
   }else{
-    printf("li $v0, %s%d\n",label,contadorRotulos);
-    printf("move $a0, 4, $zero\n");
+    Item_struct *i4 = malloc(sizeof(Item_struct));
+    Item_struct *i5 = malloc(sizeof(Item_struct));
+    char *linha4, *linha5;
+    linha4 = malloc(sizeof(char)*(strlen(label)+30));
+    sprintf(linha4, "li $v0, %s%d\n",label,contadorRotulos);
+    i4->comandoImpressao = linha4;
+    linha5 = malloc(sizeof(char)*30);
+    sprintf(linha5, "move $a0, 4, $zero\n");
+    i5->comandoImpressao = linha5;
+    inseriLista(p->text,i4);
+    inseriLista(p->text,i5);
   }
-    printf("syscall\n");
+  contadorRotulos++;
+  Item_struct *i6 = malloc(sizeof(Item_struct));
+  char *linha6;
+  linha6 = malloc(sizeof(char)*15);
+  sprintf(linha6, "syscall\n");
+  i6->comandoImpressao = linha6;
+  inseriLista(p->text,i6);
 }
 
 void imprimeScanf(Item_struct *lista,int reg){
