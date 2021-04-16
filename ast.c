@@ -144,8 +144,7 @@ void imprimiComandos(ProgramaMips *program,Comandos *auxC,int labelNum){
         switch (auxC->tipo){
             case PRINTF:
                 if(auxC->cmd_printf){
-                    // quando entra?
-                    imprimePrintf(program,"PRINTF", auxC->expr_comandos->str,auxC->cmd_printf->str, labelComandos);
+                    imprimePrintf(program,"printf", auxC->expr_comandos->str,auxC->cmd_printf->str, labelComandos);
                 }
                imprimePrintf(program,"printf", auxC->expr_comandos->str,"",labelComandos);
                labelComandos++;
